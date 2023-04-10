@@ -5,22 +5,24 @@ import { checkIfWin } from './components/TicTacToe/functions';
 import AImove from './components/TicTacToe/HardLevelFunctions';
 
 // tests for checkIfWin function
-test('checkIfWin should return true when there is a win', () => {
+test('checkIfWin should return the winner sign', () => {
 	const board = ['O', 'X', 'O', 'X', 'O', 'X', 'O', 'X', 'X'];
-	const sign = 'O';
-	expect(checkIfWin(board, sign)).toBe(true);
+	expect(checkIfWin(board)).toBe('O');
+});
+
+test('checkIfWin should return the winner sign', () => {
+	const board = ['O', 'O', 'X', 'X', 'O', 'X', 'O', 'X', 'X'];
+	expect(checkIfWin(board)).toBe('X');
 });
 
 test('checkIfWin should return false when there is no win', () => {
 	const board = ['X', 'O', 'X', 'O', 'X', 'O', 'O', 'X', ' '];
-	const sign = 'O';
-	expect(checkIfWin(board, sign)).toBe(false);
+	expect(checkIfWin(board)).toBe(false);
 });
 
 test('checkIfWin should return tie when there is no empty space and no win', () => {
 	const board = ['X', 'O', 'X', 'X', 'O', 'O', 'O', 'X', 'X'];
-	const sign = 'O';
-	expect(checkIfWin(board, sign)).toBe('tie');
+	expect(checkIfWin(board)).toBe('tie');
 });
 
 test('checkIfWin should throw an error if the board is not an array', () => {

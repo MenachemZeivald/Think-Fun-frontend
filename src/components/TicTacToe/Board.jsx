@@ -8,9 +8,6 @@ import ChatBox from './ChatBubble';
 
 export default function Board({ board, makeTurn, myTurn, winArr = [], resetFunc, vsPerson }) {
 	const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
-
-	vsPerson = true;
-
 	return (
 		<LayoutStyle>
 			<BoardStyle>

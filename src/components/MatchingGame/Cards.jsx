@@ -6,14 +6,14 @@ import Card from './Card';
 import Icon from '../Icon';
 import ChatBox from '../TicTacToe/ChatBubble';
 
-export default function Cards({ category = 'animals', numOfCards = 12 }) {
+export default function Cards({ category = 'animals', numOfCards = 18 }) {
 	const [cards, setCards] = useState([]);
 	useEffect(() => {
-		getMemoryGame();
+		getmatchingGame();
 	}, []);
 
-	const getMemoryGame = async () => {
-		let url = `/games/memoryGame/?category=${category}&perPage=${numOfCards / 2}`;
+	const getmatchingGame = async () => {
+		let url = `/games/matchingGame/?category=${category}&perPage=${numOfCards / 2}`;
 		try {
 			const response = await axios.get(url);
 			console.log(response.data);

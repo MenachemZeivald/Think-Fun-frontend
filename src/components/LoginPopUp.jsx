@@ -28,11 +28,7 @@ export default function LoginPopUp({ blurHandler, isOpen }) {
 			<span>name: {auth.name}</span>
 			<InputButton
 				text={'Edit profile'}
-				clickHandler={() => {
-					divRef.current.focus();
-					console.log('LOLLL');
-					nav('/account');
-				}}
+				clickHandler={() => nav('/account')}
 				border={'full'}
 			/>
 		</LoginPopUpStyle>

@@ -11,13 +11,15 @@ var winList = [
 	[2, 4, 6],
 ];
 
-export let checkIfWin = (board, sign) => {
-	const isWin = winList.some(winCombination => {
-		return winCombination.every(index => {
-			return board[index] === sign;
-		});
-	});
-	if (isWin) return true;
+export let checkIfWin = board => {
+	for (let i = 0; i < winList.length; i++) {
+		const [a, b, c] = winList[i];
+		let winCombination = board[a] !== ' ' && board[a] === board[b] && board[b] === board[c];
+		if (winCombination) {
+			return board[a];
+		}
+	}
+
 	if (!board.includes(' ')) return 'tie';
 	return false;
 };
@@ -78,3 +80,9 @@ function randomNum(board) {
 	}
 	return randomPlace;
 }
+
+export let isMyTurn = (board, userSign) => {
+	let numOfX = countSign(board, 'X');
+	let numofO = countSign(board, 'O');
+	return userSign === 'X' ? numOfX === numofO : numOfX - 1 === numofO;
+};

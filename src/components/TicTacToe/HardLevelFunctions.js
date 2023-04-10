@@ -38,7 +38,7 @@ function buildGameTree(board, sign) {
 }
 
 function checkBranch(board, sign) {
-	let res = checkIfWin(board, sign === 'X' ? 'O' : 'X');
+	let res = checkIfWin(board);
 	if (res) {
 		if (res === 'tie') {
 			return 0;

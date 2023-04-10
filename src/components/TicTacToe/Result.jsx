@@ -11,7 +11,7 @@ export default function Result({ res, resetLevel, resetBoard, typeGame, isOnline
 	const controller = new AbortController();
 	const refresh = useRefreshToken();
 	const { auth } = useAuth();
-	const memoryGameInit = async () => {
+	const matchingGameInit = async () => {
 		try {
 			let url = `/statistics/?typeGame=${typeGame}&isOnline=${isOnline}&level=${level.toLowerCase()}&gameRes=${res}`;
 			const response = await axiosPrivate.put(url, {
@@ -28,7 +28,7 @@ export default function Result({ res, resetLevel, resetBoard, typeGame, isOnline
 			await refresh();
 		};
 		console.log(auth);
-		!auth?.name ? refreshToken() : memoryGameInit();
+		!auth?.name ? refreshToken() : matchingGameInit();
 	}, [auth]);
 
 	useEffect(() => {
