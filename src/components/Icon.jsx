@@ -8,7 +8,9 @@ export default function Icon({ text, to, clickHandler }) {
 			<IconStyle className='material-symbols-outlined'>{text}</IconStyle>
 		</Link>
 	) : (
-		<IconStyle clickHandler={clickHandler}>{text}</IconStyle>
+		<IconStyle onClick={clickHandler} className='material-symbols-outlined'>
+			{text}
+		</IconStyle>
 	);
 }
 

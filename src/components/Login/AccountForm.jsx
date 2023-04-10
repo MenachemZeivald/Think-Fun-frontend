@@ -107,7 +107,7 @@ export default function AccountForm() {
 			setInfo(response.data);
 		} catch (error) {
 			console.log(error);
-			nav('/login', { state: { from: location }, replace: true });
+			// nav('/login', { state: { from: location }, replace: true });
 		}
 	};
 
@@ -142,7 +142,7 @@ export default function AccountForm() {
 
 	// TODO: add info to placeholder
 	// TODO: design loader
-	return !info._id ? (
+	return info._id ? (
 		<img src='https://media.tenor.com/FBeNVFjn-EkAAAAC/ben-redblock-loading.gif' />
 	) : (
 		<Form as='form' SubmitHandler={submitHandler} accountFormStyle={true}>

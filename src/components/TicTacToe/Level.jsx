@@ -38,6 +38,7 @@ const LevelsContainer = styled.div`
 	flex-direction: ${({ lang }) => lang === 'he' && 'row-reverse'};
 	width: 85vw;
 	margin: auto;
+	gap: 20px;
 	justify-content: space-around;
 	align-items: center;
 	@media (max-device-width: 768px) {
@@ -50,11 +51,8 @@ const LevelsContainer = styled.div`
 
 const Level = styled(DefaultStyle)`
 	flex: 1 1 0px;
-	max-width: 250px;
-	min-width: 220px;
-	aspect-ratio: 1;
-	border-width: 5px;
-	border-radius: 50%;
+	aspect-ratio: 2;
+	width: 10vh;
 	font-size: 350%;
 	@media (max-device-width: 768px) {
 		width: min(30%, 300vw);

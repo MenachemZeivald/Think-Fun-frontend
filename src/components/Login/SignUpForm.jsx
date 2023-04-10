@@ -83,7 +83,7 @@ export default function SignUpForm({ toggle }) {
 			case 'password':
 				return value.length < 6 ? 'Invaild password' : '';
 			case 'passwordAgain':
-				return value !== passwordData.password ? 'Passwords should match' : '';
+				return value !== formData.password ? 'Passwords should match' : '';
 			default:
 				return '';
 		}

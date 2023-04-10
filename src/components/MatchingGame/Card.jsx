@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
-export default function Card({ click, index, numOfCards }) {
+export default function Card({ click, index, numOfCards, imgUrl }) {
 	const [clicked, setClicked] = useState(false);
+	console.log(imgUrl);
 	return (
 		<CardStyle
 			clicked={clicked}
 			cards={numOfCards}
 			index={index}
+			url={imgUrl}
 			onClick={() => click && setClicked(true)}
 		/>
 	);
@@ -22,6 +24,8 @@ const CardStyle = styled.div`
 	aspect-ratio: 5/7;
 	height: ${p => (p.cards === 18 ? '25vh' : '30vh')};
 	background-color: #ff0080;
+	background-image: url(${p => p.url});
+	background-size: cover;
 	border: 1px solid black;
 	border-radius: 5px;
 	transition: all 0.5s;

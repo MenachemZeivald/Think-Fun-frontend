@@ -1,7 +1,6 @@
 import axios from 'axios';
-//const BASE_URL = 'https://think-fun.cyclic.app';
-const BASE_URL = 'http://localhost:3002';
-// const BASE_URL = "http://localhost:3002";
+export const BASE_URL = 'https://think-fun.onrender.com';
+// export const BASE_URL = 'http://localhost:3002';
 
 export default axios.create({
 	baseURL: BASE_URL,

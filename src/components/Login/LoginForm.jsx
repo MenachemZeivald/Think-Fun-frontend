@@ -109,14 +109,19 @@ export default function LoginForm({ toggle }) {
 				err={err.password}
 				onBlur={blurHandler}
 			/>
-			<span>{err.email || err.password || err.general || ''}</span>
-			<label htmlFor='persist'>Trust this Device </label>
-			<input
-				type='checkbox'
-				id='persist'
-				onChange={setPersist(prev => !prev)}
-				checked={persist}
-			/>
+			<a style={{ border: '2px solid var(--pink)', padding: '.2rem', borderRadius: '.5em' }}>
+				forget password{err.email || err.password || err.general || ''}
+			</a>
+			<div>
+				<label htmlFor='persist'>Trust this Device </label>
+				<input
+					type='checkbox'
+					id='persist'
+					defaultChecked={persist}
+					onChange={() => setPersist(prev => !prev)}
+				/>
+			</div>
+
 			<InputButton type='submit' text='submit' />
 			<InputButton clickHandler={toggle} text={'SIGN UP'} border={'full'} />
 		</Form>

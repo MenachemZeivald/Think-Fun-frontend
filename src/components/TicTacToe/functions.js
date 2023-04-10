@@ -32,7 +32,7 @@ export let AIturn = (board, level) => {
 	} else if (level === 'Medium') {
 		return chanceToWin(board) ?? randomNum(board);
 	} else if (level === 'Hard') {
-		return chanceToWin(board) ?? AImove(board);
+		return chanceToWin(board) ?? AImove(board, 'O');
 	}
 };
 

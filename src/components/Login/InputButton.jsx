@@ -5,7 +5,7 @@ import DefaultStyle from '../../DefaultStyle';
 export default function InputButton({ type, text, clickHandler, border, marginBottom, padding }) {
 	return (
 		<InputButtonStyle
-			onClick={() => (clickHandler ? clickHandler() : undefined)}
+			onMouseDown={() => (clickHandler ? clickHandler() : undefined)}
 			as='button'
 			type={type}
 			border={border}

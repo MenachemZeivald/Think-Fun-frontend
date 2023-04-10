@@ -15,6 +15,7 @@ import MemoryGameList from './components/admin/memoryGameList';
 import MainNav from './components/MainNav';
 import LoginPage from './components/Login/LoginPage';
 import Stat from './components/Stat';
+import LeaderBoard from './components/LeaderBoard';
 import TicTacToe from './components/TicTacToe/TicTacToe';
 import MatchingGame from './components/MatchingGame/MatchingGmae';
 import Checkers from './components/Checkers/Checkers';
@@ -37,14 +38,14 @@ export default function App() {
 				<Route path='MatchingGame/:cards' element={<Cards />} />
 				<Route path='Checkers' element={<Checkers />} />
 				<Route path='unauthorized' element={<Unauthorized />} />
+				<Route path='LeaderBoard' element={<LeaderBoard />} />
 				<Route path='*' element={<NoPage />} />
 
+				<Route path='stat' element={<Stat />} />
 				{/* we want to protect these routes */}
 				<Route element={<PersistLogin />}>
-					<Route element={<RequireAuth allowedRoles={'user'} />}>
-						<Route path='stat' element={<Stat />} />
-						<Route path='account' element={<Account />} />
-					</Route>
+					<Route element={<RequireAuth allowedRoles={'user'} />}></Route>
+					<Route path='account' element={<Account />} />
 					<Route element={<RequireAuth allowedRoles={'admin'} />}>
 						<Route path='admin/users' element={<UsersList />} />
 						<Route path='admin/categories' element={<CategoriesList />} />

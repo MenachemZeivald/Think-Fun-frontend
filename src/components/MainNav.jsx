@@ -1,23 +1,28 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import LoginPopUp from './LoginPopUp';
 import Icon from './Icon';
+import useAuth from '../hooks/useAuth';
 import LOGO from '../assets/logo.png';
 
-export default function MainNav({ children }) {
+export default function MainNav() {
 	const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-	const user = false;
+	const { auth } = useAuth();
+	const user = auth.name;
+
 	return (
 		<>
 			<NavStyle>
+				{/* TODO: change to profile pic if user sign in */}
 				<Icon
-					text={user ? user : 'PERSON'}
-					to={user || 'login'}
+					text={'PERSON'}
+					// to={user ? false : 'login'}
+					to={false}
 					clickHandler={() => setIsPopUpOpen(true)}
 				/>
-				{isPopUpOpen && <LoginPopUp blurHandler={() => setIsPopUpOpen(false)} />}
+				<LoginPopUp blurHandler={() => setIsPopUpOpen(false)} isOpen={isPopUpOpen} />
 				<Link to='/'>
 					<img src={LOGO} alt='logo think fun'></img>
 				</Link>
@@ -29,6 +34,8 @@ export default function MainNav({ children }) {
 }
 
 const NavStyle = styled.nav`
+	position: relative;
+	z-index: 10;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -38,6 +45,8 @@ const NavStyle = styled.nav`
 	}
 `;
 const LayoutStyle = styled.main`
+	position: relative;
+	z-index: 1;
 	height: 80vh;
 	display: flex;
 	flex-wrap: wrap;

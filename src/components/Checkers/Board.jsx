@@ -1,16 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import Square from './Square';
-import ResetBtn from './ResetBtn';
+import ResetBtn from '../TicTacToe/ResetBtn';
 import Icon from '../Icon';
-import ChatBox from './ChatBubble';
+import ChatBox from '../TicTacToe/ChatBubble';
 
-export default function Board({ board, makeTurn, myTurn, winArr = [], resetFunc, vsPerson }) {
-	const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
-
-	vsPerson = true;
-
+export default function Board({ board, makeTurn, myTurn, winArr = [], resetFunc }) {
 	return (
 		<LayoutStyle>
 			<BoardStyle>
@@ -27,13 +23,11 @@ export default function Board({ board, makeTurn, myTurn, winArr = [], resetFunc,
 					);
 				})}
 			</BoardStyle>
-			<ChatBox blurHandler={() => setIsChatBoxOpen(false)} isOpen={isChatBoxOpen} />
-			<FooterStyle justify={vsPerson}>
-				{vsPerson ? <Icon text={'question_mark'} /> : null}
+			<ChatBox />
+			<FooterStyle>
+				<Icon to text={'question_mark'} />
 				<ResetBtn resetFunc={resetFunc} clickable={winArr.length} />
-				{vsPerson ? (
-					<Icon text={'chat'} clickHandler={() => setIsChatBoxOpen(true)} />
-				) : null}
+				<Icon to text={'chat'} />
 			</FooterStyle>
 		</LayoutStyle>
 	);
@@ -65,6 +59,6 @@ const BoardStyle = styled.div`
 const FooterStyle = styled.div`
 	width: 100%;
 	display: flex;
-	justify-content: ${p => (p.justify ? 'space-between' : 'center')};
+	justify-content: space-between;
 	align-items: center;
 `;

@@ -1,28 +1,70 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import axios, { BASE_URL } from '../../api/axios';
 import styled from 'styled-components';
 import Card from './Card';
 
-export default function Cards() {
-	let { cards } = useParams();
-	cards = parseInt(cards);
+import Icon from '../Icon';
+import ChatBox from '../TicTacToe/ChatBubble';
 
-	let list = [];
-	for (let i = 0; i < cards; i++) {
-		list.push(i + 1);
-	}
+export default function Cards({ category = 'animals', numOfCards = 12 }) {
+	const [cards, setCards] = useState([]);
+	useEffect(() => {
+		getMemoryGame();
+	}, []);
+
+	const getMemoryGame = async () => {
+		let url = `/games/memoryGame/?category=${category}&perPage=${numOfCards / 2}`;
+		try {
+			const response = await axios.get(url);
+			console.log(response.data);
+			setCards(response.data);
+		} catch (err) {
+			console.log(err);
+		}
+	};
 	return (
-		<CardsContainer cards={cards}>
-			{list.map((v, i) => {
-				return <Card key={v} click={true} numOfCards={cards} index={i} />;
-			})}
-		</CardsContainer>
+		<LayoutStyle>
+			<CardsContainer cards={cards.length}>
+				{cards.map((v, i) => {
+					return (
+						<Card
+							key={v._id}
+							click={true}
+							imgUrl={BASE_URL + '/' + v.img_url}
+							alt={v.description}
+							numOfCards={numOfCards}
+							index={i}
+						/>
+					);
+				})}
+			</CardsContainer>
+			<ChatBox />
+			<FooterStyle>
+				<Icon to text={'chat'} />
+			</FooterStyle>
+		</LayoutStyle>
 	);
 }
 
 const CardsContainer = styled.div`
 	display: grid;
+	// TODO: change props name
 	grid-template-columns: repeat(${({ cards }) => (cards === 6 ? '3' : '6')}, 1fr);
 	grid-template-rows: ${({ cards }) => Math.max(2, cards / 6)};
 	gap: 1rem;
+`;
+const LayoutStyle = styled.div`
+	display: grid;
+	place-items: center;
+	gap: 0.5em;
+	& > div:nth-child(2) {
+		border: 1px solid black;
+	}
+`;
+
+const FooterStyle = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 `;

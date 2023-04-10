@@ -1,18 +1,16 @@
 import { checkEachOption, checkIfWin, countSign } from './functions';
 
-export default function AImove(board) {
-	return manualMoves4FirstTurn(board) || buildGameTree(board);
+export default function AImove(board, sign) {
+	return manualMoves4FirstTurn(board, sign) ?? buildGameTree(board, sign);
 }
 
-function manualMoves4FirstTurn(board) {
-	if (countSign(board, 'O') === 0) {
+function manualMoves4FirstTurn(board, sign) {
+	if (countSign(board, sign) === 0) {
 		if (board[4] === ' ') {
 			return 4;
 		}
 		return [0, 2, 6, 8][Math.floor(Math.random() * 4)];
 	}
-
-	return false;
 }
 
 /**
@@ -20,14 +18,14 @@ function manualMoves4FirstTurn(board) {
  * @param board - The current state of the board.
  * @returns a number between 1 and 9.
  */
-function buildGameTree(board) {
+function buildGameTree(board, sign) {
 	/* Checking all the possible moves and assigning a score to each move. */
 	let avialbleOptions = {};
 	for (let place = 0; place < 9; place++) {
 		let tempArr = [...board];
 		if (board[place] === ' ') {
-			tempArr[place] = 'O';
-			avialbleOptions[place] = checkBranch(tempArr, 'X');
+			tempArr[place] = sign;
+			avialbleOptions[place] = checkBranch(tempArr, sign === 'O' ? 'X' : 'O');
 		}
 	}
 
