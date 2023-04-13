@@ -8,6 +8,7 @@ import ChatBox from './ChatBubble';
 
 export default function Board({ board, makeTurn, myTurn, winArr = [], resetFunc, vsPerson }) {
 	const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
+	// TODO: buttons just when needed, person or AI
 	return (
 		<LayoutStyle>
 			<BoardStyle>

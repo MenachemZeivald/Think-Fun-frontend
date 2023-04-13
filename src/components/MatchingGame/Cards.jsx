@@ -1,39 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import axios, { BASE_URL } from '../../api/axios';
+import React from 'react';
+import { BASE_URL } from '../../api/axios';
 import styled from 'styled-components';
 import Card from './Card';
 
 import Icon from '../Icon';
 import ChatBox from '../TicTacToe/ChatBubble';
 
-export default function Cards({ category = 'animals', numOfCards = 18 }) {
-	const [cards, setCards] = useState([]);
-	useEffect(() => {
-		getmatchingGame();
-	}, []);
-
-	const getmatchingGame = async () => {
-		let url = `/games/matchingGame/?category=${category}&perPage=${numOfCards / 2}`;
-		try {
-			const response = await axios.get(url);
-			console.log(response.data);
-			setCards(response.data);
-		} catch (err) {
-			console.log(err);
-		}
-	};
+export default function Cards({ cards, gameType, clickHandler, userCanClick }) {
 	return (
 		<LayoutStyle>
 			<CardsContainer cards={cards.length}>
-				{cards.map((v, i) => {
+				{cards.map((card, i) => {
 					return (
 						<Card
-							key={v._id}
-							click={true}
-							imgUrl={BASE_URL + '/' + v.img_url}
-							alt={v.description}
-							numOfCards={numOfCards}
+							key={i}
+							click={userCanClick}
+							isOpen={card.isOpen}
+							isMatch={card.isMatched}
+							imgUrl={BASE_URL + '/' + card.img_url}
+							alt={card.description}
 							index={i}
+							clickHandler={clickHandler}
 						/>
 					);
 				})}
@@ -48,7 +35,7 @@ export default function Cards({ category = 'animals', numOfCards = 18 }) {
 
 const CardsContainer = styled.div`
 	display: grid;
-	// TODO: change props name
+	// TODO: css should support 18 cards only
 	grid-template-columns: repeat(${({ cards }) => (cards === 6 ? '3' : '6')}, 1fr);
 	grid-template-rows: ${({ cards }) => Math.max(2, cards / 6)};
 	gap: 1rem;

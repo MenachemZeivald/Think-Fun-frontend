@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-export default function Card({ click, index, numOfCards, imgUrl }) {
-	const [clicked, setClicked] = useState(false);
-	console.log(imgUrl);
+export default function Card({
+	click,
+	index,
+	numOfCards = 18,
+	imgUrl,
+	clickHandler,
+	isOpen,
+	isMatch,
+}) {
 	return (
 		<CardStyle
-			clicked={clicked}
+			isOpen={isOpen}
+			isMatch={isMatch}
 			cards={numOfCards}
 			index={index}
 			url={imgUrl}
-			onClick={() => click && setClicked(true)}
+			onClick={() => isOpen || !click || clickHandler(index)}
 		/>
 	);
 }
@@ -23,13 +30,15 @@ const CardStyle = styled.div`
 	position: relative;
 	aspect-ratio: 5/7;
 	height: ${p => (p.cards === 18 ? '25vh' : '30vh')};
+	opacity: ${p => p.isMatch && '0'};
 	background-color: #ff0080;
 	background-image: url(${p => p.url});
+	background-position: center;
 	background-size: cover;
 	border: 1px solid black;
 	border-radius: 5px;
 	transition: all 0.5s;
-	transform: translate(0) rotateX(${p => (p.clicked ? '0' : '180deg')});
+	transform: translate(0) rotateX(${p => (p.isOpen || p.isMatch ? '0' : '180deg')});
 	animation: ${cardsMove} 0.5s ${p => p.index / 5}s ease-out backwards;
 	transform-style: preserve-3d;
 
