@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Card from './Card';
 
 import Icon from '../Icon';
-import ChatBox from '../TicTacToe/ChatBubble';
+import ChatBox from '../TicTacToe/ChatBox';
 
 export default function Cards({ cards, gameType, clickHandler, userCanClick }) {
 	return (

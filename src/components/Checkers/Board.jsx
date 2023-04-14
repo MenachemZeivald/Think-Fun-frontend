@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Square from './Square';
 import ResetBtn from '../TicTacToe/ResetBtn';
 import Icon from '../Icon';
-import ChatBox from '../TicTacToe/ChatBubble';
+import ChatBox from '../TicTacToe/ChatBox';
 
 export default function Board({ board, makeTurn, myTurn, winArr = [], resetFunc }) {
 	return (

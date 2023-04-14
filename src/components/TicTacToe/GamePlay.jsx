@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import { BASE_URL } from '../../api/axios';
 
 import Board from './Board';
 
 import { AIturn, checkIfWin, findWinArr, isMyTurn } from './functions';
 
-const socket = io.connect('http://localhost:3002');
+const socket = io.connect(BASE_URL);
 
 export default function GamePlay({ level, winner, setWinner }) {
 	const CONNECTED = 1;
@@ -23,26 +24,32 @@ export default function GamePlay({ level, winner, setWinner }) {
 		if (level === 'person') {
 			socket.on('connect', () => console.log(socket.id));
 			//add name and image
-			socket.emit('start-game');
+			socket.emit('start-tic-tac-toe');
 			socket.on('game-started', room => {
 				setConnection(CONNECTED);
 				setGameObj(room);
-				setUserSign(socket.id === room.player1.id ? 'X' : 'O');
+				setUserSign(socket.id === room.idPlayer1 ? 'X' : 'O');
 				socket.emit('join-room', room.id_room);
-				console.log(room);
 			});
 		}
 	}, []);
+
+	useEffect(() => {
+		console.log('CHANGE');
+	}, [userSign]);
 
 	useEffect(() => {
 		if (level === 'person') {
 			socket.on('active-game', gameObgReceive => {
 				console.log('receive ', gameObgReceive);
 				let index = gameObgReceive.index;
-				let sign = socket.id === gameObgReceive.player1.id ? 'O' : 'X';
+				let sign = socket.id === gameObgReceive.idPlayer1 ? 'O' : 'X';
+				// let sign = userSign === 'X' ? 'O' : 'X';
+				// console.log('userSign: ', userSign);
+				// console.log('sign: ', sign);
 				setBoard(prevBoard => {
 					let tempBoard = [...prevBoard];
-					tempBoard[index] = sign || 'X';
+					tempBoard[index] = sign;
 					return tempBoard;
 				});
 			});
@@ -64,7 +71,7 @@ export default function GamePlay({ level, winner, setWinner }) {
 
 	function makeTurn(index, sign) {
 		if (level === 'person') {
-			sign = socket.id === gameObj.player1.id ? 'X' : 'O';
+			sign = userSign;
 		}
 		setBoard(prevBoard => {
 			let tempBoard = [...prevBoard];
@@ -84,7 +91,6 @@ export default function GamePlay({ level, winner, setWinner }) {
 	/* Checking if there is a winner. */
 	let winArr = [];
 	let res = checkIfWin(board);
-	console.log('res', res);
 	if (!winner && res) {
 		winArr = res === 'tie' ? [...board.keys()] : findWinArr(board, res);
 		setTimeout(() => {

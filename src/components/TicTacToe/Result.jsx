@@ -6,7 +6,7 @@ import useAuth from '../../hooks/useAuth';
 import useAxiosPrivate from '../../hooks/useAxiosPrivet';
 import useRefreshToken from '../../hooks/useRefreshToken';
 
-export default function Result({ res, resetLevel, resetBoard, typeGame, isOnline, level }) {
+export default function Result({ res, resetLevel, resetBoard, typeGame, isOnline, level = '' }) {
 	const axiosPrivate = useAxiosPrivate();
 	const controller = new AbortController();
 	const refresh = useRefreshToken();

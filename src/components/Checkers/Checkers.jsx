@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import ResetBtn from '../TicTacToe/ResetBtn';
 import Icon from '../Icon';
-import ChatBox from '../TicTacToe/ChatBubble';
+import ChatBox from '../TicTacToe/ChatBox';
 
 const Board = styled.div`
 	display: grid;

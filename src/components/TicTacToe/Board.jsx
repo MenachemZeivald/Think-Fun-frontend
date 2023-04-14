@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Square from './Square';
 import ResetBtn from './ResetBtn';
 import Icon from '../Icon';
-import ChatBox from './ChatBubble';
+import ChatBox from './ChatBox';
 
 export default function Board({ board, makeTurn, myTurn, winArr = [], resetFunc, vsPerson }) {
 	const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);

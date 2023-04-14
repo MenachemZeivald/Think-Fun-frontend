@@ -9,16 +9,14 @@ export default function MatchingGame() {
 	const [categoryArr, setCategoryArr] = useState([]);
 	const [gameType, setGameType] = useState('');
 	const [choosenCategory, setChoosenCategory] = useState('');
-	const [winner, setWinner] = useState(false);
+	const [winner, setWinner] = useState('');
 
 	useEffect(() => {
 		getCategories();
 	}, []);
 
 	const setCategoryById = categoryName => {
-		console.log('categoryName', categoryName);
 		let categoryId = categoryArr.filter(categoryObj => categoryObj.name === categoryName)[0];
-		console.log('categoryId', categoryId.category_id);
 		setChoosenCategory(categoryId.category_id);
 	};
 
@@ -58,7 +56,7 @@ export default function MatchingGame() {
 	}
 	return (
 		<Result
-			res={'win'}
+			res={winner}
 			resetBoard={() => setWinner(false)}
 			typeGame={'matching_game'}
 			isOnline={gameType === 'VS person'}
