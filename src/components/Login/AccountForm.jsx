@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import useAxiosPrivate from '../../hooks/useAxiosPrivet';
-import { useNavigate, useLocation } from 'react-router-dom';
+import useRefreshToken from '../../hooks/useRefreshToken';
 import useAuth from '../../hooks/useAuth';
+import useLogout from '../../hooks/useLogout';
 
 import Form from './Form';
 import InputButton from './InputButton';
@@ -11,17 +13,21 @@ import InputFile from './InputFile';
 import ProfilePic from './ProfilePic';
 
 import DEFAULT_PROFILE_IMG from '../../assets/avataaars.png';
+import { BASE_URL } from '../../api/axios';
+
+import axios from 'axios';
 
 export default function AccountForm() {
-  // const { setAuth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
+  const refresh = useRefreshToken();
   const controller = new AbortController();
+  const logout = useLogout();
   const nav = useNavigate();
   const location = useLocation();
+
+  const { auth } = useAuth();
   const [errMsg, setErrMsg] = useState(''); // TODO: merge with err
-
   const [info, setInfo] = useState({});
-
   const [userDetails, setUserDetails] = useState({ name: 'My name', email: 'lol@LOL.com' });
   const [passwordData, setPasswordData] = useState({
     password: '',
@@ -94,10 +100,10 @@ export default function AccountForm() {
   };
 
   useEffect(() => {
-    matchingGameInit();
+    myInfoInit();
   }, []);
 
-  const matchingGameInit = async () => {
+  const myInfoInit = async () => {
     try {
       let url = '/users/myInfo';
       const response = await axiosPrivate.get(url, {
@@ -107,7 +113,7 @@ export default function AccountForm() {
       setInfo(response.data);
     } catch (error) {
       console.log(error);
-      // nav('/login', { state: { from: location }, replace: true });
+      nav('/login', { state: { from: location }, replace: true });
     }
   };
 
@@ -125,6 +131,7 @@ export default function AccountForm() {
       nav('/login', { state: { from: location }, replace: true });
     }
   };
+
   const sendPasswordDataToServer = async (bodyData) => {
     try {
       let url = '/users/editPassword';
@@ -140,27 +147,58 @@ export default function AccountForm() {
     }
   };
 
+  const sendImageToServer = async (e) => {
+    const formData = new FormData();
+    formData.append('image', e.target.files[0]);
+    try {
+      const url = info.img_url ? '/users/editImage' : '/users/uploadImage';
+      const headers = { Authorization: `Bearer ${auth.accessToken}` };
+      const response = await axios.post(BASE_URL + url, formData, { headers });
+      if (response.data.modifiedCount === 1) myInfoInit();
+    } catch (error) {
+      console.error(error.response);
+      if (error.response.status === 403) {
+        const url = info.img_url ? '/users/editImage' : '/users/uploadImage';
+        const accessToken = await refresh();
+        const headers = { Authorization: `Bearer ${accessToken}` };
+        const response = await axios.post(BASE_URL + url, formData, { headers });
+        if (response.data.modifiedCount === 1) myInfoInit();
+        console.log(response.data);
+      }
+    }
+  };
+
+  const deleteAccount = async () => {
+    try {
+      const response = await axiosPrivate.delete('/users/', {
+        signal: controller.signal,
+      });
+      if (response.data.deletedCount) {
+        alert('Your account has been successfully deleted');
+        nav('/');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const signOut = async () => {
+    await logout();
+    nav('/');
+  };
+
   // TODO: add info to placeholder
   // TODO: design loader
-  return info._id ? (
-    <img src='https://media.tenor.com/FBeNVFjn-EkAAAAC/ben-redblock-loading.gif' />
+  return !info._id ? (
+    <img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />
   ) : (
     <Form as='form' SubmitHandler={submitHandler} accountFormStyle={true}>
-      <ProfilePic src={selectedImage ? URL.createObjectURL(selectedImage) : DEFAULT_PROFILE_IMG} />
+      <ProfilePic src={info.img_url ? BASE_URL + '/' + info.img_url : DEFAULT_PROFILE_IMG} />
       <h1>MY ACCOUNT</h1>
 
       <InputField label={'change your name'} name={'name'} placeholder={info?.name} err={formErr.name} flexRow={true} onBlur={blurHandler} />
-
       <InputField label={'change your email'} name={'email'} placeholder={info?.email} err={formErr.email} flexRow={true} onBlur={blurHandler} />
-
-      <InputFile
-        onChange={(event) => {
-          console.log(event.target.files[0]);
-          setSelectedImage(event.target.files[0]);
-        }}
-        btnText={'update profile photo'}
-      />
-
+      <InputFile onChange={sendImageToServer} btnText={'update profile photo'} />
       {expandChangePasswordArea || <InputButton clickHandler={() => setExpandChangePasswordArea(true)} text='change password' border='full' />}
 
       {expandChangePasswordArea && (
@@ -172,6 +210,17 @@ export default function AccountForm() {
       )}
 
       <InputButton type='submit' text='submit' />
+
+      <button style={{ background: '#ff6392', color: '#ffe45e', border: 'none', borderRadius: '4px', height: '28px' }} onClick={signOut}>
+        logout
+      </button>
+
+      <button
+        style={{ background: 'red', color: 'white', border: 'none', borderRadius: '4px', height: '32px', marginTop: '28px' }}
+        onClick={() => window.confirm('Are you sure?') && deleteAccount()}
+      >
+        delete account
+      </button>
     </Form>
   );
 }

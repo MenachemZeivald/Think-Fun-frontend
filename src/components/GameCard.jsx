@@ -5,7 +5,7 @@ import DefaultStyle from '../DefaultStyle';
 
 export default function GameCard({ bgImg, name, link, setter }) {
 	return link ? (
-		<Link to={name.replace(/\s/g, '')}>
+		<Link  to={name.replace(/\s/g, '')}>
 			<GameCardStyle bgImg={bgImg}>{name}</GameCardStyle>
 		</Link>
 	) : (
@@ -22,6 +22,7 @@ const GameCardStyle = styled(DefaultStyle)`
 	font-size: 7vmin;
 	overflow: hidden;
 	transition: all 0.3s;
+	
 
 	&::after {
 		content: '';

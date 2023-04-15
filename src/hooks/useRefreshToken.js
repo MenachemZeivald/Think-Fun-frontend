@@ -1,6 +1,8 @@
 import axios from "../api/axios";
 import useAuth from "./useAuth";
 
+import DEFAULT_PROFILE_IMG from '../assets/avataaars.png'
+
 function UseRefreshToken() {
   const { setAuth } = useAuth();
 
@@ -16,6 +18,7 @@ function UseRefreshToken() {
         name: response.data.name,
         role: response.data.role,
         accessToken: response.data.accessToken,
+        profilePic: response.data.img_url ,
       };
     });
     return response.data.accessToken;

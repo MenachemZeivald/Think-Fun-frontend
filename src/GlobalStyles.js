@@ -28,6 +28,9 @@ body {
   text-decoration: none;
   user-select: none;
 }
+a{
+  text-decoration: none;
+}
 `;
 
 export default GlobalStyle;

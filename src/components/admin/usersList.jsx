@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import useAxiosPrivate from "../../hooks/useAxiosPrivet";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import useAxiosPrivate from '../../hooks/useAxiosPrivet';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function UsersList() {
   const axiosPrivate = useAxiosPrivate();
@@ -10,9 +10,10 @@ export default function UsersList() {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
-  const [sort, setShort] = useState("");
+  const [sort, setShort] = useState('');
   const [reverse, setReverse] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getUsers();
@@ -27,9 +28,10 @@ export default function UsersList() {
       });
       isMounted && setUsers(response.data);
       console.log(response.data);
+      setIsLoading(false);
     } catch (err) {
       console.error(err);
-      nav("/login", { state: { from: location }, replace: true });
+      nav('/login', { state: { from: location }, replace: true });
     }
   };
 
@@ -49,7 +51,7 @@ export default function UsersList() {
         console.log(err.response.data);
       } else {
         console.error(err);
-        nav("/login", { state: { from: location }, replace: true });
+        nav('/login', { state: { from: location }, replace: true });
       }
     }
   };
@@ -69,43 +71,45 @@ export default function UsersList() {
     }
   };
 
-  return (
-    <div className="categories-container">
-      <div className="center-container">
-        <div className="text-container">
+  return isLoading ? (
+    <img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />
+  ) : (
+    <div className='categories-container'>
+      <div className='center-container'>
+        <div className='text-container'>
           <h1>List of Users</h1>
         </div>
-        <div className="sort-container">
-          <div className="select-container">
-            <select className="form-select" onChange={(e) => setShort(e.target.value)}>
-              <option value="">sort by</option>
-              <option value="_id">date</option>
-              <option value="email">email</option>
-              <option value="name">name</option>
+        <div className='sort-container'>
+          <div className='select-container'>
+            <select className='form-select' onChange={(e) => setShort(e.target.value)}>
+              <option value=''>sort by</option>
+              <option value='_id'>date</option>
+              <option value='email'>email</option>
+              <option value='name'>name</option>
             </select>
           </div>
-          <div className="select-container">
-            <select className="form-select" onChange={(e) => setPerPage(e.target.value)}>
-              <option value="">how much</option>
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
+          <div className='select-container'>
+            <select className='form-select' onChange={(e) => setPerPage(e.target.value)}>
+              <option value=''>how much</option>
+              <option value='5'>5</option>
+              <option value='10'>10</option>
+              <option value='15'>15</option>
+              <option value='20'>20</option>
+              <option value='50'>50</option>
             </select>
           </div>
-          <div className="search-container">
-            <input placeholder="search user..." className="form-control search" type="text" onChange={(e) => setSearch(e.target.value)} />
+          <div className='search-container'>
+            <input placeholder='search user...' className='form-control search' type='text' onChange={(e) => setSearch(e.target.value)} />
           </div>
-          <div className="form-check form-switch revers-container">
-            <input className="form-check-input" type="checkbox" id="reverse" onChange={() => setReverse((prev) => !prev)} checked={reverse} />
-            <label className="form-check-label" htmlFor="reverse">
+          <div className='form-check form-switch revers-container'>
+            <input className='form-check-input' type='checkbox' id='reverse' onChange={() => setReverse((prev) => !prev)} checked={reverse} />
+            <label className='form-check-label' htmlFor='reverse' style={{ color: 'black' }}>
               Reverse
             </label>
           </div>
         </div>
-        <div className="table-container">
-          <table className="table table-striped table-hover">
+        <div className='table-container'>
+          <table className='table table-striped table-hover'>
             <thead>
               <tr>
                 <th>#</th>
@@ -123,24 +127,16 @@ export default function UsersList() {
                     <td>{item.name}</td>
                     <td>{item.email}</td>
                     <td>
-                      <select className="form-select" onChange={(e) => changeRole(e, item._id)}>
+                      <select className='form-select' onChange={(e) => changeRole(e, item._id)}>
                         {/* <option value="">chose role</option> */}
                         <option value={item.role}>{item.role}</option>
-                        <option value={item.role === "admin" ? "user" : item.role === "user" ? "admin" : "user"}>
-                          {item.role === "admin" ? "user" : item.role === "user" ? "admin" : "user"}
+                        <option value={item.role === 'admin' ? 'user' : item.role === 'user' ? 'admin' : 'user'}>
+                          {item.role === 'admin' ? 'user' : item.role === 'user' ? 'admin' : 'user'}
                         </option>
-                        <option value={item.role === "admin" || item.role === "user" ? "block" : "admin"}>
-                          {item.role === "admin" || item.role === "user" ? "block" : "admin"}
+                        <option value={item.role === 'admin' || item.role === 'user' ? 'block' : 'admin'}>
+                          {item.role === 'admin' || item.role === 'user' ? 'block' : 'admin'}
                         </option>
                       </select>
-                      {/* <button
-                        className="btn btn-role"
-                        onClick={() => {
-                          onChangeRole(item._id, item.role);
-                        }}
-                      >
-                        {item.role}
-                      </button> */}
                     </td>
                     <td>{item.date_created.substring(0, 10)}</td>
                   </tr>

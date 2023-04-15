@@ -64,7 +64,7 @@ export default function EditMatchingGame() {
         </div>
         <div className='form-container'>
           {!info._id ? (
-            <img src='https://media.tenor.com/FBeNVFjn-EkAAAAC/ben-redblock-loading.gif' />
+             <img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />
           ) : (
             <form onSubmit={handleSubmit(onSub)} id='id_form' className='col-md-12 shadow p-2'>
               <label>description</label>

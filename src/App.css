@@ -24,7 +24,12 @@ header a {
   padding: 0 12px;
 }
 
-
+.link-admin {
+  background: #ffe45e;
+  border: 3px solid #ff6392;
+  border-radius: 10px;
+  color: #4f92c5;
+}
 .categories-container {
   display: flex;
   justify-content: center;
@@ -33,7 +38,7 @@ header a {
   min-height: 500px;
 }
 
-.categories-container .center-container{
+.categories-container .center-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -50,24 +55,23 @@ header a {
   margin: 22px 0;
 }
 
-.categories-container .text-container h1{
- font-size: 2em;
+.categories-container .text-container h1 {
+  font-size: 2em;
 }
 
 .categories-container .sort-container {
   width: 100%;
-display: flex;
-justify-content: center;
-justify-content: space-around;
-align-items: center;
+  display: flex;
+  justify-content: center;
+  justify-content: space-around;
+  align-items: center;
 }
-.categories-container .sort-container .select-container, .search-container{
- width: 20%;
+.categories-container .sort-container .select-container,
+.search-container {
+  width: 20%;
 }
 
- 
-
-.categories-container .center-container .table-container  {
+.categories-container .center-container .table-container {
   width: 100%;
 }
 .categories-container .center-container .table-container .tr {
@@ -77,14 +81,14 @@ align-items: center;
 .categories-container .center-container .table-container .tr .del-edit {
   width: 20%;
 }
- .categories-container .center-container .table-container .tr .del-edit .del-btn {
+.categories-container .center-container .table-container .tr .del-edit .del-btn {
   color: var(--Dblue);
   border: var(--pink) 2px solid;
 }
 .categories-container .center-container .table-container .tr .del-edit .edit-btn {
   color: var(--Dblue);
   border: var(--pink) 2px solid;
-} 
+}
 
 .categories-container .center-container .button-container {
   display: flex;
@@ -99,7 +103,6 @@ align-items: center;
   margin: 28px 0;
 }
 
-
 .categories-container .center-container .form-container {
   width: 100%;
 }
@@ -113,16 +116,6 @@ align-items: center;
 .categories-container .center-container .table-container .btn-role {
   border: var(--pink) 2px solid;
 }
-
-
-
-
-
-
-
-
-
-
 
 .edit-container {
   width: 50%;

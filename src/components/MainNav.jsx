@@ -26,7 +26,7 @@ export default function MainNav() {
 				<Link to='/'>
 					<img src={LOGO} alt='logo think fun'></img>
 				</Link>
-				<Icon text='bar_chart' to='stat' />
+				<Icon text='bar_chart' to='/LeaderBoard' />
 			</NavStyle>
 			<LayoutStyle>{<Outlet />}</LayoutStyle>
 		</>

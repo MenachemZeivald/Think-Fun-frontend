@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import useAxiosPrivate from "../../hooks/useAxiosPrivet";
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import useAxiosPrivate from '../../hooks/useAxiosPrivet';
 
 export default function CategoriesList() {
   const nav = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
   const axiosPrivate = useAxiosPrivate();
   const controller = new AbortController();
 
   const [arr, setArr] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getCategories();
@@ -22,45 +23,48 @@ export default function CategoriesList() {
       });
       // console.log(response.data);
       setArr(response.data);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
-      nav("/login", { state: { from: location }, replace: true });
+      nav('/login', { state: { from: location }, replace: true });
     }
   };
 
   const deletion = async (idDel) => {
     try {
-      let url = "/categories/" + idDel;
+      let url = '/categories/' + idDel;
       const response = await axiosPrivate.delete(url, {
         signal: controller.signal,
       });
       if (response.data.deletedCount) {
-        console.log("Category delete");
+        console.log('Category delete');
         getCategories();
       }
     } catch (error) {
       console.log(error);
-      nav("/login", { state: { from: location }, replace: true });
+      nav('/login', { state: { from: location }, replace: true });
     }
   };
 
   const editing = (idEdit) => {
-    nav("/admin/categories/edit/" + idEdit);
+    nav('/admin/categories/edit/' + idEdit);
   };
 
-  return (
-    <div className="categories-container">
-      <div className="center-container">
-        <div className="text-container">
-          <h1 className="display-6">List of categories:</h1>
+  return isLoading ? (
+    <img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />
+  ) : (
+    <div className='categories-container'>
+      <div className='center-container'>
+        <div className='text-container'>
+          <h1 className='display-6'>List of categories:</h1>
         </div>
-        <div className="sort-container">
-        <div className="search-container">
-            <input placeholder="search..." className="form-control search" type="text" onChange={(e) => setSearch(e.target.value)} />
+        <div className='sort-container'>
+          <div className='search-container'>
+            <input placeholder='search...' className='form-control search' type='text' onChange={(e) => setSearch(e.target.value)} />
           </div>
         </div>
-        <div className="table-container">
-          <table className="table table-hover">
+        <div className='table-container'>
+          <table className='table table-hover'>
             <thead>
               <tr>
                 <th>#</th>
@@ -72,16 +76,16 @@ export default function CategoriesList() {
             <tbody>
               {arr.map((item, i) => {
                 return (
-                  <tr className="tr" key={item._id}>
+                  <tr key={item._id}>
                     <td>{i + 1}</td>
                     <td>{item.name}</td>
                     <td>{item.category_id}</td>
-                    <td className="del-edit">
-                      <button className="btn del-btn" onClick={() => window.confirm("Delete item?") && deletion(item._id)}>
-                        <i className="fa-solid fa-trash"></i>
+                    <td className='del-edit'>
+                      <button className='btn del-btn' onClick={() => window.confirm('Delete item?') && deletion(item._id)}>
+                        <i className='fa-solid fa-trash'></i>
                       </button>
-                      <button className="btn  edit-btn ms-2" onClick={() => editing(item._id)}>
-                        <i className="fa-solid fa-pen-to-square"></i>
+                      <button className='btn  edit-btn ms-2' onClick={() => editing(item._id)}>
+                        <i className='fa-solid fa-pen-to-square'></i>
                       </button>
                     </td>
                   </tr>
@@ -90,8 +94,8 @@ export default function CategoriesList() {
             </tbody>
           </table>
         </div>
-        <div className="button-container">
-          <Link className="btn add-new" to="/admin/categories/new">
+        <div className='button-container'>
+          <Link className='btn add-new' to='/admin/categories/new'>
             add new category
           </Link>
         </div>

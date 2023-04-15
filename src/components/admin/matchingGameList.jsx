@@ -14,6 +14,7 @@ export default function MatchingGameList() {
   const [category, setCategory] = useState('');
   const [categoriesArr, setCategoriesArr] = useState([]);
   const [search, setSearch] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getCategories();
@@ -25,6 +26,7 @@ export default function MatchingGameList() {
         signal: controller.signal,
       });
       setCategoriesArr(response.data);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
       nav('/login', { state: { from: location }, replace: true });
@@ -69,7 +71,9 @@ export default function MatchingGameList() {
     nav('/admin/games/matchingGame/edit/' + idEdit);
   };
 
-  return (
+  return isLoading ? (
+    <img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />
+  ) : (
     <div className='categories-container'>
       <div className='center-container'>
         <div className='text-container'>
@@ -80,7 +84,9 @@ export default function MatchingGameList() {
             <select className='form-select' onChange={(e) => setCategory(e.target.value)}>
               <option value=''>categories</option>
               {categoriesArr.map((item) => (
-                <option value={item.category_id}>{item.name}</option>
+                <option key={item._id} value={item.category_id}>
+                  {item.name}
+                </option>
               ))}
             </select>
           </div>
