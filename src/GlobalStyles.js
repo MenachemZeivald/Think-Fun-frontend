@@ -16,7 +16,6 @@ body {
     background: var(--blue);
     font-family: 'Fredoka One', cursive;
     min-width: 350px;
-    overflow: hidden;
 }
 
 *:lang(he) {

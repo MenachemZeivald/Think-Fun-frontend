@@ -32,7 +32,7 @@ export default function LoginPopUp({ blurHandler, isOpen }) {
   }, [auth]);
 
   return isUserConnected ? (
-    <LoginPopUpStyle tabIndex={-1} ref={divRef} onBlur={blurHandler} bgImg={BASE_URL + '/' + auth?.profilePic} isOpen={isOpen}>
+    <LoginPopUpStyle tabIndex={-1} ref={divRef} onBlur={blurHandler} bgImg={auth?.profilePic?.[0] !== 'h' ? BASE_URL + '/' + auth?.profilePic : auth?.profilePic} isOpen={isOpen}>
       <div></div>
       <span>name: {auth?.name}</span>
       <InputButton text={'Edit profile'} clickHandler={() => nav('/account')} border={'full'} />

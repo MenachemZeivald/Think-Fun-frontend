@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 import axios from '../../api/axios';
@@ -17,6 +17,7 @@ export default function LoginForm({ toggle }) {
   const location = useLocation();
 
   const reRef = useRef();
+  const [errMsg, setErrMsg] = useState("");
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -71,7 +72,6 @@ export default function LoginForm({ toggle }) {
       nav(prevWebPage, { replace: true });
     } catch (err) {
       serverErrorHandler(err);
-      console.log(err.response.data);
     }
   };
 
@@ -87,7 +87,7 @@ export default function LoginForm({ toggle }) {
 
   function serverErrorHandler({ response }) {
     const errMsg =
-      !response?.status || response.status === 500
+      !response?.status || response.status === 502
         ? 'No Server Response'
         : response.status === 400
         ? 'Missing Email or Password'
@@ -112,6 +112,7 @@ export default function LoginForm({ toggle }) {
       <InputButton type='submit' text='submit' />
       <InputButton clickHandler={toggle} text={'SIGN UP'} border={'full'} />
 
+      <Link to={'/forgotPassword'}>forgot password</Link>
       <ReCAPTCHA sitekey='6LdZHoglAAAAAAKOoJmp6GdSxZ_qub6x1ZzkuH9M' size='invisible' ref={reRef} />
     </Form>
   );

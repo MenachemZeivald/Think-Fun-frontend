@@ -28,7 +28,7 @@ export default function AccountForm() {
   const { auth } = useAuth();
   const [errMsg, setErrMsg] = useState(''); // TODO: merge with err
   const [info, setInfo] = useState({});
-  const [userDetails, setUserDetails] = useState({ name: 'My name', email: 'lol@LOL.com' });
+  const [userDetails, setUserDetails] = useState({ name: '', email: '' });
   const [passwordData, setPasswordData] = useState({
     password: '',
     passwordAgain: '',
@@ -151,14 +151,14 @@ export default function AccountForm() {
     const formData = new FormData();
     formData.append('image', e.target.files[0]);
     try {
-      const url = info.img_url ? '/users/editImage' : '/users/uploadImage';
+      const url = info.img_url[0] !== 'h' ? '/users/editImage' : '/users/uploadImage';
       const headers = { Authorization: `Bearer ${auth.accessToken}` };
       const response = await axios.post(BASE_URL + url, formData, { headers });
       if (response.data.modifiedCount === 1) myInfoInit();
     } catch (error) {
       console.error(error.response);
       if (error.response.status === 403) {
-        const url = info.img_url ? '/users/editImage' : '/users/uploadImage';
+        const url = info.img_url[0] !== 'h' ? '/users/editImage' : '/users/uploadImage';
         const accessToken = await refresh();
         const headers = { Authorization: `Bearer ${accessToken}` };
         const response = await axios.post(BASE_URL + url, formData, { headers });
@@ -193,7 +193,7 @@ export default function AccountForm() {
     <img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />
   ) : (
     <Form as='form' SubmitHandler={submitHandler} accountFormStyle={true}>
-      <ProfilePic src={info.img_url ? BASE_URL + '/' + info.img_url : DEFAULT_PROFILE_IMG} />
+      <ProfilePic src={info.img_url[0] !== 'h' ? BASE_URL + '/' + info.img_url : info.img_url} />
       <h1>MY ACCOUNT</h1>
 
       <InputField label={'change your name'} name={'name'} placeholder={info?.name} err={formErr.name} flexRow={true} onBlur={blurHandler} />

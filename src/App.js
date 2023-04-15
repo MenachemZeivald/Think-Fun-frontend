@@ -25,6 +25,7 @@ import Home from './components/Home';
 import './App.css';
 import Links from './components/admin/links';
 import MatchingGameList from './components/admin/matchingGameList';
+import ForgotPassword from './components/Login/forgotPassword';
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
         {/* public routes */}
         <Route index element={<Home />} />
         <Route path='login' element={<LoginPage />} />
+        <Route path='forgotPassword' element={<ForgotPassword />} />
         <Route path='TicTacToe' element={<TicTacToe />} />
         <Route path='MatchingGame' element={<MatchingGame />} />
         <Route path='Checkers' element={<Checkers />} />

@@ -15,7 +15,10 @@ export default function GamePlay({ gameType, category, setWinner }) {
   const [connection, setConnection] = useState(WAITING_FOR_CONNECT);
   const [turn, setTurn] = useState();
   const [gameObj, setGameObj] = useState();
-
+  console.log('card 0: ', cards[0]);
+  console.log('card 1: ', cards[1]);
+  console.log('card 2: ', cards[2]);
+  console.log('card 3: ', cards[3]);
   useEffect(() => {
     if (gameType === 'VS Person') {
       socket.on('connect', () => console.log(socket.id));
@@ -36,10 +39,10 @@ export default function GamePlay({ gameType, category, setWinner }) {
       socket.on('active-matching-game', (gameObgReceive) => {
         console.log('receive ', gameObgReceive);
         setCards(gameObgReceive.cards);
-        // let index = gameObgReceive.index;
-        // let tempCards = [...cards];
-        // tempCards[index].isOpen = true;
-        // setCards([...tempCards]);
+        let index = gameObgReceive.index;
+        let tempCards = [...cards];
+        tempCards[index].isOpen = true;
+        setCards([...tempCards]);
         // setTurn(true);
         console.log(cards);
       });
@@ -77,9 +80,9 @@ export default function GamePlay({ gameType, category, setWinner }) {
     let tempCards = [...cards];
     tempCards[index].isOpen = true;
     setCards([...tempCards]);
-    gameObj.cards[index].isOpen = true;
+    // gameObj.cards[index].isOpen = true;
     if (gameType === 'VS Person') {
-      socket.emit('active-matching-game', gameObj);
+      socket.emit('active-matching-game', {...gameObj, index});
       console.log(cards);
     }
   };
@@ -89,10 +92,12 @@ export default function GamePlay({ gameType, category, setWinner }) {
   };
 
   const openCards = cards.filter((card) => card.isOpen);
-  if (openCards.length === 2 && openCards[0]._id === openCards[1]._id) {
+  if (openCards.length === 2 && openCards[0]._doc._id === openCards[1]._doc._id) {
     setTimeout(() => {
       setnumOfCardsIFliped(numOfCardsIFliped + 2);
-      setCards((cards) => cards.map((card) => (card._id === openCards[0]._id || card._id === openCards[1]._id ? { ...card, isOpen: false, isMatched: true } : card)));
+      setCards((cards) =>
+        cards.map((card) => (card._doc._id === openCards[0]._doc._id || card._doc._id === openCards[1]._doc._id ? { ...card, isOpen: false, isMatched: true } : card))
+      );
     }, 1000);
   } else if (openCards.length === 2) {
     setTimeout(() => {
@@ -101,6 +106,7 @@ export default function GamePlay({ gameType, category, setWinner }) {
   }
 
   if (cards.length && !countUnmatchedCards(cards)) {
+    console.log(countUnmatchedCards(cards));
     setWinner(numOfCardsIFliped > 9 ? 'win' : 'lose');
   }
   if (gameType === 'VS Person' && connection === WAITING_FOR_CONNECT) {

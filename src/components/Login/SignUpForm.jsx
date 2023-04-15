@@ -25,6 +25,7 @@ export default function SignUpForm({ toggle }) {
     password: '',
     passwordAgain: '',
     recaptchaToken: '',
+    img_url: '',
   });
 
   const [err, setErr] = useState({
@@ -73,6 +74,7 @@ export default function SignUpForm({ toggle }) {
   const sendDataToServer = async (data) => {
     data.recaptchaToken = await reRef.current.executeAsync();
     reRef.current.reset();
+    if (!selectedImage) data.img_url = `https://api.dicebear.com/6.x/pixel-art/svg?seed=${data.name}`;
     try {
       const response = await axios.post('/users/register', data, {
         headers: { 'Content-Type': 'application/json' },
@@ -113,7 +115,11 @@ export default function SignUpForm({ toggle }) {
   };
 
   function serverErrorHandler({ response }) {
-    const errMsg = !response || response.status === 500 ? 'No Server Response' : response?.status === 401 ? 'Email already registered' : 'Sign up Failed';
+    const errMsg = !response || response.status === 502 
+    ? 'No Server Response' 
+    : response?.status === 401 
+    ? 'Email already registered' 
+    : 'Sign up Failed';
     setErr({ ...err, general: errMsg });
     console.log(errMsg);
   }

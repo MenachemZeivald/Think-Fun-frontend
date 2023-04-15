@@ -20,7 +20,8 @@ export default function MainNav() {
 					text={'PERSON'}
 					// to={user ? false : 'login'}
 					to={false}
-					clickHandler={() => setIsPopUpOpen(true)}
+					//clickHandler={() => user ? setIsPopUpOpen(true) : ''}
+					clickHandler={() => setIsPopUpOpen(true) }
 				/>
 				<LoginPopUp blurHandler={() => setIsPopUpOpen(false)} isOpen={isPopUpOpen} />
 				<Link to='/'>
