@@ -26,6 +26,8 @@ import './App.css';
 import Links from './components/admin/links';
 import MatchingGameList from './components/admin/matchingGameList';
 import ForgotPassword from './components/Login/forgotPassword';
+import InviteFriend from './components/TicTacToe/inviteFriend';
+import InvitationLink from './components/TicTacToe/invitationLink';
 
 export default function App() {
   return (
@@ -35,6 +37,8 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path='login' element={<LoginPage />} />
         <Route path='forgotPassword' element={<ForgotPassword />} />
+        <Route path='tictactoe/invitefriend' element={<InviteFriend />} />
+        <Route path='room/:idRoom' element={<InvitationLink/> } />
         <Route path='TicTacToe' element={<TicTacToe />} />
         <Route path='MatchingGame' element={<MatchingGame />} />
         <Route path='Checkers' element={<Checkers />} />
@@ -48,12 +52,12 @@ export default function App() {
           <Route element={<RequireAuth allowedRoles={'user'} />}></Route>
           <Route path='account' element={<Account />} />
           <Route element={<RequireAuth allowedRoles={'admin'} />}>
-            <Route path='admin' element={<Links/>} />
+            <Route path='admin' element={<Links />} />
             <Route path='admin/users' element={<UsersList />} />
             <Route path='admin/categories' element={<CategoriesList />} />
             <Route path='admin/categories/new' element={<AddCategory />} />
             <Route path='admin/categories/edit/:id' element={<EditCategory />} />
-            <Route path='admin/games/matchingGame' element={<MatchingGameList/>} />
+            <Route path='admin/games/matchingGame' element={<MatchingGameList />} />
             <Route path='admin/games/matchingGame/edit/:id' element={<EditMatchingGame />} />
             <Route path='admin/games/matchingGame/new' element={<AddMatchingGame />} />
           </Route>

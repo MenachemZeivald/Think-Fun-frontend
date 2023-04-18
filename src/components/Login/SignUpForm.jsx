@@ -13,6 +13,9 @@ import useAuth from '../../hooks/useAuth';
 import axios from '../../api/axios';
 import { useRef } from 'react';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function SignUpForm({ toggle }) {
   const { setAuth, auth } = useAuth();
   const nav = useNavigate();
@@ -91,6 +94,7 @@ export default function SignUpForm({ toggle }) {
         profilePic: img_url || DEFAULT_PROFILE_IMG,
         accessToken,
       });
+      notify('success', 'success');
       const prevWebPage = location.state?.from?.pathname || '/';
       nav(prevWebPage, { replace: true });
     } catch (err) {
@@ -115,21 +119,34 @@ export default function SignUpForm({ toggle }) {
   };
 
   function serverErrorHandler({ response }) {
-    const errMsg = !response || response.status === 502 
-    ? 'No Server Response' 
-    : response?.status === 401 
-    ? 'Email already registered' 
-    : 'Sign up Failed';
+    const errMsg = !response
+      ? notify('error', 'No Server Response')
+      : response.status === 400
+      ? notify('error', 'Missing info')
+      : response?.status === 401
+      ? notify('error', 'Email already, try login')
+      : notify('error', 'Sign up Failed');
     setErr({ ...err, general: errMsg });
-    console.log(errMsg);
   }
+
+  const notify = (status, message) =>
+    toast[status](message, {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'colored',
+    });
 
   return (
     <Form SubmitHandler={submitHandler}>
-      <ProfilePic src={selectedImage ? URL.createObjectURL(selectedImage) : DEFAULT_PROFILE_IMG} />
+      <ProfilePic src={selectedImage ? URL.createObjectURL(selectedImage) : `https://api.dicebear.com/6.x/pixel-art/svg?seed=${formData.name}`} />
       <h1>SIGN UP</h1>
 
-      <InputField label={'please enter your name'} name={'name'} err={err.name} onBlur={blurHandler} />
+      <InputField label={'please enter your name'} name={'name'} err={err.name} onChange={blurHandler} />
       <InputField label={'please enter your email'} name={'email'} err={err.email} onBlur={blurHandler} />
       <InputFile
         onChange={(event) => {
@@ -144,6 +161,7 @@ export default function SignUpForm({ toggle }) {
       <InputButton type='submit' text='submit' />
       <InputButton clickHandler={toggle} text='LOGIN' border='full' />
       <ReCAPTCHA sitekey='6LdZHoglAAAAAAKOoJmp6GdSxZ_qub6x1ZzkuH9M' size='invisible' ref={reRef} />
+      <ToastContainer />
     </Form>
   );
 }

@@ -60,7 +60,7 @@ export default function MatchingGame() {
       typeGame={'matching_game'}
       //TO DO chang to real level
       level={'hard'}
-      isOnline={gameType === 'VS person'}
+      isOnline={gameType !== 'VS person'}
     />
   );
 }

@@ -42,11 +42,11 @@ export default function Stat() {
         <ul>
           {Object.keys(stat?.tic_tac_toe).map((level) => {
             return level !== 'winOnline' ? (
-              <ul>
+              <ul key={level}>
                 {level}
                 {Object.keys(stat?.tic_tac_toe[level]).map((res) => {
                   return (
-                    <li>
+                    <li key={res}>
                       {res}: {stat?.tic_tac_toe[level][res]}
                     </li>
                   );
@@ -64,11 +64,11 @@ export default function Stat() {
         <ul>
           {Object.keys(stat?.matching_game).map((level) => {
             return level !== 'winOnline' ? (
-              <ul>
+              <ul key={level}>
                 {level}
                 {Object.keys(stat?.matching_game[level]).map((res) => {
                   return (
-                    <li>
+                    <li key={res}>
                       {res}: {stat?.matching_game[level][res]}
                     </li>
                   );
@@ -86,11 +86,11 @@ export default function Stat() {
         <ul>
           {Object.keys(stat?.checkers).map((level) => {
             return level !== 'winOnline' ? (
-              <ul>
+              <ul key={level}>
                 {level}
                 {Object.keys(stat?.checkers[level]).map((res) => {
                   return (
-                    <li>
+                    <li key={res}>
                       {res}: {stat?.checkers[level][res]}
                     </li>
                   );
@@ -125,4 +125,10 @@ const StatContainer = styled(DefaultStyle)`
       font-size: 1rem;
     }
   }
+
+  @media (max-width: 700px) {
+    width: 65%;
+    margin: 12px
+
+	}
 `;

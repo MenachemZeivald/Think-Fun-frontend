@@ -15,13 +15,12 @@ export default function MainNav() {
 	return (
 		<>
 			<NavStyle>
-				{/* TODO: change to profile pic if user sign in */}
 				<Icon
 					text={'PERSON'}
-					// to={user ? false : 'login'}
-					to={false}
-					//clickHandler={() => user ? setIsPopUpOpen(true) : ''}
-					clickHandler={() => setIsPopUpOpen(true) }
+					 to={user ? false : 'login'}
+					 clickHandler={() => user ? setIsPopUpOpen(true) : ''}
+					 //to={false}
+					//clickHandler={() => setIsPopUpOpen(true) }
 				/>
 				<LoginPopUp blurHandler={() => setIsPopUpOpen(false)} isOpen={isPopUpOpen} />
 				<Link to='/'>

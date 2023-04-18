@@ -86,6 +86,9 @@ export default function LeaderBoard() {
     <img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />
   ) : (
     <>
+    <div style={{width: '100%', textAlign : 'center', color: '#ffe45e' }}>
+    <h1 >LeaderBoard </h1>
+    </div>
       <StatContainer>
         <h1>tic tac toe</h1>
         <ul>
@@ -146,4 +149,11 @@ const StatContainer = styled(DefaultStyle)`
       font-size: 1.5rem;
     }
   }
+
+  @media (max-width: 700px) {
+    width: 65%;
+    margin: 12px
+
+	}
+
 `;

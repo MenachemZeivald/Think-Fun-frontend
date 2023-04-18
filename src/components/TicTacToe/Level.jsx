@@ -43,10 +43,11 @@ const LevelsContainer = styled.div`
 	align-items: center;
 	@media (max-device-width: 768px) {
 		flex-direction: column;
-		height: 80svh;
+		height: 70vh;
 		gap: 10px;
 		justify-content: space-evenly;
 	}
+	
 `;
 
 const Level = styled(DefaultStyle)`

@@ -43,4 +43,6 @@ const GameCardStyle = styled(DefaultStyle)`
 			opacity: 1;
 		}
 	}
+
+	
 `;

@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import useRefreshToken from '../hooks/useRefreshToken';
 import { Link, useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../api/axios';
+import useLogout from '../hooks/useLogout';
 
 import DefaultStyle from '../DefaultStyle';
 import useAuth from '../hooks/useAuth';
@@ -10,11 +11,10 @@ import InputButton from './Login/InputButton';
 
 export default function LoginPopUp({ blurHandler, isOpen }) {
   const divRef = useRef(null);
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const nav = useNavigate();
   const refresh = useRefreshToken();
-
-  const [isUserConnected, setIsUserConnected] = useState(false);
+  const logout = useLogout();
 
   useEffect(() => {
     if (isOpen) {
@@ -27,27 +27,28 @@ export default function LoginPopUp({ blurHandler, isOpen }) {
       await refresh();
     };
     if (!auth?.name) refreshToken();
-    if (auth.name) setIsUserConnected(true);
-    console.log(isUserConnected);
   }, [auth]);
 
-  return isUserConnected ? (
+  const signOut = async () => {
+    await logout();
+    setAuth({});
+    nav('/');
+  };
+
+  return (
     <LoginPopUpStyle tabIndex={-1} ref={divRef} onBlur={blurHandler} bgImg={auth?.profilePic?.[0] !== 'h' ? BASE_URL + '/' + auth?.profilePic : auth?.profilePic} isOpen={isOpen}>
       <div></div>
       <span>name: {auth?.name}</span>
       <InputButton text={'Edit profile'} clickHandler={() => nav('/account')} border={'full'} />
       <InputButton text={'Your statistics'} clickHandler={() => nav('/stat')} border={'full'} />
-    </LoginPopUpStyle>
-  ) : (
-    <LoginPopUpStyle tabIndex={-1} ref={divRef} onBlur={blurHandler} isOpen={isOpen}>
-      <InputButton text={'login'} clickHandler={() => nav('/login')} border={'full'} />
+      <InputButton text={'logout'} clickHandler={signOut} border={'full'} />
     </LoginPopUpStyle>
   );
 }
 
 const openAnim = keyframes`
 	100% {
-		height: 300px;
+		height: 350px;
 		width: 250px;
 		border: 3px solid var(--pink);
 	}

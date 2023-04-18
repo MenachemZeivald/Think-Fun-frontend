@@ -11,7 +11,7 @@ export default function ProfilePic({ src }) {
 
 const PicContainer = styled.div`
 	position: absolute;
-	top: -30px;
+	top: -40px;
 	background-color: var(--yellow);
 	border: 3px solid var(--pink);
 	border-radius: 50%;
@@ -19,6 +19,6 @@ const PicContainer = styled.div`
 	aspect-ratio: 1;
 	img {
 		transform: scale(1.4);
-		width: 50px;
+		width: 70px;
 	}
 `;

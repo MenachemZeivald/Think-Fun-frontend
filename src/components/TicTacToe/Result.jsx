@@ -11,6 +11,7 @@ export default function Result({ res, resetLevel, resetBoard, typeGame, isOnline
 	const controller = new AbortController();
 	const refresh = useRefreshToken();
 	const { auth } = useAuth();
+	console.log(typeGame, isOnline);
 	const matchingGameInit = async () => {
 		try {
 			let url = `/statistics/?typeGame=${typeGame}&isOnline=${isOnline}&level=${level.toLowerCase()}&gameRes=${res}`;
@@ -150,9 +151,12 @@ const ResBtnContainer = styled.div`
 
 	@media (max-device-width: 425px) {
 		margin-top: 2vh;
+		
 	}
 	@media (max-device-width: 768px) {
 		flex-wrap: wrap;
+		width: 90%;
+		height: 20%;
 	}
 `;
 // const ResetBtns = styled(DefaultStyle)`

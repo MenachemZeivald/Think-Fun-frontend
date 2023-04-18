@@ -15,6 +15,9 @@ import ProfilePic from './ProfilePic';
 import DEFAULT_PROFILE_IMG from '../../assets/avataaars.png';
 import { BASE_URL } from '../../api/axios';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import axios from 'axios';
 
 export default function AccountForm() {
@@ -25,7 +28,7 @@ export default function AccountForm() {
   const nav = useNavigate();
   const location = useLocation();
 
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const [errMsg, setErrMsg] = useState(''); // TODO: merge with err
   const [info, setInfo] = useState({});
   const [userDetails, setUserDetails] = useState({ name: '', email: '' });
@@ -168,13 +171,29 @@ export default function AccountForm() {
     }
   };
 
+  const deleteImage = async () => {
+    try {
+      const response = await axiosPrivate.delete('/users/deleteImage', {
+        signal: controller.signal,
+      });
+      if (response.data == 'OK') {
+        notify('success', 'Your profile photo has been deleted');
+        myInfoInit();
+      }
+    } catch (error) {
+      console.log(error);
+      notify('error', 'Your profile picture has not been deleted. Try again');
+    }
+  };
+
   const deleteAccount = async () => {
     try {
       const response = await axiosPrivate.delete('/users/', {
         signal: controller.signal,
       });
       if (response.data.deletedCount) {
-        alert('Your account has been successfully deleted');
+        notify('success', 'Your account has been deleted');
+        setAuth({});
         nav('/');
       }
     } catch (error) {
@@ -182,10 +201,17 @@ export default function AccountForm() {
     }
   };
 
-  const signOut = async () => {
-    await logout();
-    nav('/');
-  };
+  const notify = (status, message) =>
+    toast[status](message, {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'colored',
+    });
 
   // TODO: add info to placeholder
   // TODO: design loader
@@ -193,14 +219,13 @@ export default function AccountForm() {
     <img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />
   ) : (
     <Form as='form' SubmitHandler={submitHandler} accountFormStyle={true}>
-      <ProfilePic src={info.img_url[0] !== 'h' ? BASE_URL + '/' + info.img_url : info.img_url} />
+      <ProfilePic src={info.img_url?.[0] !== 'h' ? BASE_URL + '/' + info.img_url : info.img_url} />
       <h1>MY ACCOUNT</h1>
-
       <InputField label={'change your name'} name={'name'} placeholder={info?.name} err={formErr.name} flexRow={true} onBlur={blurHandler} />
       <InputField label={'change your email'} name={'email'} placeholder={info?.email} err={formErr.email} flexRow={true} onBlur={blurHandler} />
       <InputFile onChange={sendImageToServer} btnText={'update profile photo'} />
+      {info.img_url?.[0] !== 'h' && <InputButton clickHandler={deleteImage} text={'delete profile photo'} />}
       {expandChangePasswordArea || <InputButton clickHandler={() => setExpandChangePasswordArea(true)} text='change password' border='full' />}
-
       {expandChangePasswordArea && (
         <>
           <InputField label={'your old password'} type={'password'} name={'oldPassword'} err={formErr.oldPassword} flexRow={true} onBlur={blurHandler} />
@@ -208,19 +233,15 @@ export default function AccountForm() {
           <InputField label={'reenter your password'} as={'input'} type={'password'} name={'passwordAgain'} err={formErr.passwordAgain} flexRow={true} onBlur={blurHandler} />
         </>
       )}
-
       <InputButton type='submit' text='submit' />
 
-      <button style={{ background: '#ff6392', color: '#ffe45e', border: 'none', borderRadius: '4px', height: '28px' }} onClick={signOut}>
-        logout
-      </button>
-
       <button
-        style={{ background: 'red', color: 'white', border: 'none', borderRadius: '4px', height: '32px', marginTop: '28px' }}
+        style={{ background: '#ff6392', color: '#ffe45e', border: 'none', borderRadius: '4px', height: '32px', marginTop: '28px' }}
         onClick={() => window.confirm('Are you sure?') && deleteAccount()}
       >
         delete account
       </button>
+      <ToastContainer />
     </Form>
   );
 }
