@@ -25,7 +25,7 @@ body {
 *, *::before, *::after {
   box-sizing: border-box;
   text-decoration: none;
-  user-select: none;
+  // user-select: none;
 }
 a{
   text-decoration: none;

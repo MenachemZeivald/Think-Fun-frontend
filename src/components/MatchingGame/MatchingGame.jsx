@@ -28,7 +28,7 @@ export default function MatchingGame() {
 			console.log(error);
 		}
 	};
-
+  
 	if (!gameType) {
 		return (
 			<>

@@ -131,3 +131,58 @@ header a {
   flex-wrap: wrap;
   justify-content: center;
 }
+
+.share-invite {
+  align-items: center;
+  margin-top: 10px;
+}
+.share-invite-text {
+  text-align: center;
+}
+
+.share-invite button {
+  border: none;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  margin-bottom: 10px;
+  color: white;
+  font-size: 36px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 12px;
+}
+
+.share-invite button.whatsapp {
+  background-color: #25d366;
+}
+
+.share-invite button.telegram {
+  background-color: #0088cc;
+}
+
+.share-invite button.messages {
+  background-color: #ffcc33;
+}
+
+.share-invite button.slack {
+  background-color: #4a154b;
+}
+
+.share-invite button.copy {
+  background-color: #555041;
+}
+
+.share-invite button i {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.share-invite .share-invite-text {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}

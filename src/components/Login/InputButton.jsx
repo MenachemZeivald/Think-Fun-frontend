@@ -24,6 +24,7 @@ export const InputButtonStyle = styled(DefaultStyle)`
 	padding: ${p => p.padding || '0.5em'};
 	font-family: 'Fredoka One', cursive;
 	transition: all 0.5s;
+	margin: 8px 0;
 
 	&:active,
 	&:focus,

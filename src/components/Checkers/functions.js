@@ -63,7 +63,6 @@ const checkJump = (board, moveDir, currPosition, color, jumpLeft) => {
 	);
 };
 
-// write a recursive function to get all the double jump moves
 const getLegalJumpMoves = (board, jumpMoves, color) => {
 	console.log('jumpMoves', jumpMoves);
 	let doubleJumpMoves = [];
@@ -252,6 +251,7 @@ function minimax(board, depth, isMaximizing, color) {
 					const [legalMoves] = getLegalMoves(
 						board,
 						[rowIndex, columnIndex],
+
 						color,
 						board[rowIndex][columnIndex].isKing
 					);

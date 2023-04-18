@@ -9,7 +9,8 @@ import Form from './Form';
 import InputField from './InputField';
 import InputButton from './InputButton';
 
-import DEFAULT_PROFILE_IMG from '../../assets/avataaars.png';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function LoginForm({ toggle }) {
   const { setAuth, auth, persist, setPersist } = useAuth();
@@ -17,7 +18,7 @@ export default function LoginForm({ toggle }) {
   const location = useLocation();
 
   const reRef = useRef();
-  const [errMsg, setErrMsg] = useState("");
+  const [errMsg, setErrMsg] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -86,34 +87,48 @@ export default function LoginForm({ toggle }) {
   }
 
   function serverErrorHandler({ response }) {
-    const errMsg =
-      !response?.status || response.status === 502
-        ? 'No Server Response'
-        : response.status === 400
-        ? 'Missing Email or Password'
-        : response.status === 401
-        ? 'Email or Password not much'
-        : 'Login Failed';
+    const errMsg = !response?.status
+      ? 'No Server Response'
+      : response.status === 400
+      ? 'Missing Email or Password'
+      : response.status === 401
+      ? 'Email or Password not much'
+      : 'Login Failed';
     setErr({ ...err, general: errMsg });
-    console.log(err);
+    notify('error', errMsg);
   }
+  const notify = (status, message) =>
+    toast[status](message, {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'colored',
+    });
 
   return (
     <Form as='form' SubmitHandler={SubmitHandler}>
       <h1>LOGIN</h1>
       <InputField label={'please enter your email'} name='email' err={err.email} onBlur={blurHandler} />
       <InputField label={'please enter your password'} type='password' name='password' err={err.password} onBlur={blurHandler} />
-      <a style={{ border: '2px solid var(--pink)', padding: '.2rem', borderRadius: '.5em' }}>forget password{err.email || err.password || err.general || ''}</a>
+      {/* TO DO check with Menachem */}
+      {/* <a style={{ border: '2px solid var(--pink)', padding: '.2rem', borderRadius: '.5em' }}>forget password{err.email || err.password || err.general || ''}</a> */}
       <div>
         <label htmlFor='persist'>Trust this Device </label>
-        <input type='checkbox' id='persist' defaultChecked={persist} onChange={() => setPersist((prev) => !prev)} />
+        <input style={{ margin: '14px 8px' }} type='checkbox' id='persist' defaultChecked={persist} onChange={() => setPersist((prev) => !prev)} />
       </div>
 
       <InputButton type='submit' text='submit' />
       <InputButton clickHandler={toggle} text={'SIGN UP'} border={'full'} />
 
-      <Link to={'/forgotPassword'}>forgot password</Link>
+      <Link to={'/forgotPassword'} style={{ color: '#4f92c5', margin: '24px 0 0 0' }}>
+        forgot password
+      </Link>
       <ReCAPTCHA sitekey='6LdZHoglAAAAAAKOoJmp6GdSxZ_qub6x1ZzkuH9M' size='invisible' ref={reRef} />
+      <ToastContainer />
     </Form>
   );
 }
