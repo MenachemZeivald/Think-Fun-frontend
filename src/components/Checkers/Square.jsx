@@ -33,6 +33,7 @@ const SquareStyle = styled.div`
 	border-radius: ${p => p.legalMove && '5px'};
 	transform: ${p => p.legalMove && 'scale(1.12)'};
 	filter: ${p => p.chosenPiece && 'brightness(1.5)'};
+	z-index: ${p => p.chosenPiece && '-1'};
 	transition: all 0.2s ease-in-out;
 	display: flex;
 	justify-content: center;

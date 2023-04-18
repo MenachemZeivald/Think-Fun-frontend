@@ -1,71 +1,91 @@
-export function getLegalMoves(board, rowIndex, columnIndex, color, isKing) {
+export function getLegalMoves(board, currPosition, color, isKing) {
+	const [rowIndex, columnIndex] = currPosition;
 	const legalMoves = [];
+	const jumpMoves = [];
+	const doubleJumpMoves = [];
+	const moveDirections = isKing ? [-1, 1] : [color === 'red' ? 1 : -1];
 
-	// Determine the direction(s) the piece can move based on its color and king status
-	const moveDirections = [];
-	if (isKing) {
-		moveDirections.push(-1, 1);
-	} else {
-		moveDirections.push(color === 'red' ? 1 : -1);
-	}
+	// Check legal moves in all directions
+	for (const moveDir of moveDirections) {
+		const leftRow = rowIndex + moveDir;
+		const rightRow = rowIndex + moveDir;
+		const leftCol = columnIndex - 1;
+		const rightCol = columnIndex + 1;
 
-	// Check if the piece can move diagonally to the left and right in all possible directions
-	for (const moveDirection of moveDirections) {
-		if (columnIndex > 0) {
-			const leftRow = rowIndex + moveDirection;
-			const leftCol = columnIndex - 1;
-			if (leftRow < 8 && board[leftRow][leftCol].piece === null) {
-				legalMoves.push([leftRow, leftCol]);
-			}
+		if (checkMove(board, leftRow, leftCol)) {
+			legalMoves.push([leftRow, leftCol]);
 		}
 
-		if (columnIndex < 7) {
-			const rightRow = rowIndex + moveDirection;
-			const rightCol = columnIndex + 1;
-			if (rightRow < 8 && board[rightRow][rightCol].piece === null) {
-				legalMoves.push([rightRow, rightCol]);
-			}
+		if (checkMove(board, rightRow, rightCol)) {
+			legalMoves.push([rightRow, rightCol]);
 		}
 
-		// Check if the piece can jump diagonally to the left in all possible directions
-		if (columnIndex > 1) {
-			const leftRow = rowIndex + moveDirection;
-			const leftCol = columnIndex - 1;
-			const jumpRow = rowIndex + moveDirection * 2;
-			const jumpCol = columnIndex - 2;
-			if (
-				leftRow < 8 &&
-				jumpRow < 8 &&
-				board[leftRow][leftCol].piece !== null &&
-				board[leftRow][leftCol].piece !== color &&
-				board[jumpRow][jumpCol].piece === null
-			) {
-				legalMoves.push([jumpRow, jumpCol]);
-			}
+		let jumpLeft = true;
+		if (checkJump(board, moveDir, [rowIndex, columnIndex], color, jumpLeft)) {
+			legalMoves.push([rowIndex + moveDir * 2, columnIndex - 2]);
+			jumpMoves.push([rowIndex + moveDir * 2, columnIndex - 2]);
 		}
 
-		// Check if the piece can jump diagonally to the right in all possible directions
-		if (columnIndex < 6) {
-			const rightRow = rowIndex + moveDirection;
-			const rightCol = columnIndex + 1;
-			const jumpRow = rowIndex + moveDirection * 2;
-			const jumpCol = columnIndex + 2;
-			if (
-				rightRow < 8 &&
-				jumpRow < 8 &&
-				board[rightRow][rightCol].piece !== null &&
-				board[rightRow][rightCol].piece !== color &&
-				board[jumpRow][jumpCol].piece === null
-			) {
-				legalMoves.push([jumpRow, jumpCol]);
-			}
+		jumpLeft = false;
+		if (checkJump(board, moveDir, [rowIndex, columnIndex], color, jumpLeft)) {
+			legalMoves.push([rowIndex + moveDir * 2, columnIndex + 2]);
+			jumpMoves.push([rowIndex + moveDir * 2, columnIndex + 2]);
 		}
 	}
 
-	return legalMoves;
+	// if (jumpMoves.length > 0) doubleJumpMoves.push(...getLegalJumpMoves(board, jumpMoves, color));
+
+	return [legalMoves, doubleJumpMoves];
 }
 
-// write a function that change the board if the user choose a legal move
+const checkMove = (board, row, col) => {
+	return row >= 0 && row < 8 && col >= 0 && col < 8 && board[row][col].piece === null;
+};
+
+const checkJump = (board, moveDir, currPosition, color, jumpLeft) => {
+	const [row, col] = currPosition;
+	const middleRow = row + moveDir;
+	const middleCol = col + (jumpLeft ? -1 : 1);
+	const jumpRow = row + moveDir * 2;
+	const jumpCol = col + (jumpLeft ? -1 : 1) * 2;
+	return (
+		middleRow < 8 &&
+		middleRow >= 0 &&
+		middleCol < 8 &&
+		middleCol >= 0 &&
+		jumpRow >= 0 &&
+		jumpRow < 8 &&
+		jumpCol < 8 &&
+		jumpCol >= 0 &&
+		board[middleRow][middleCol].piece !== null &&
+		board[middleRow][middleCol].piece !== color &&
+		board[jumpRow][jumpCol].piece === null
+	);
+};
+
+const getLegalJumpMoves = (board, jumpMoves, color) => {
+	console.log('jumpMoves', jumpMoves);
+	let doubleJumpMoves = [];
+	for (const move of jumpMoves) {
+		const [row, col] = move;
+		const moveDirections = [1, -1];
+		for (const moveDir of moveDirections) {
+			let jumpLeft = true;
+			if (checkJump(board, moveDir, [row, col], color, jumpLeft)) {
+				doubleJumpMoves.push([row + moveDir * 2, col - 2]);
+			}
+			jumpLeft = false;
+			if (checkJump(board, moveDir, [row, col], color, jumpLeft)) {
+				doubleJumpMoves.push([row + moveDir * 2, col + 2]);
+			}
+		}
+	}
+	if (doubleJumpMoves.length > 0) {
+		doubleJumpMoves = doubleJumpMoves.concat(getLegalJumpMoves(board, doubleJumpMoves, color));
+	}
+	return doubleJumpMoves;
+};
+
 export function movePiece(board, rowIndex, columnIndex, color, isKing, move) {
 	// Check if the move is a jump
 	if (Math.abs(move[0] - rowIndex) === 2) {
@@ -86,15 +106,6 @@ export function movePiece(board, rowIndex, columnIndex, color, isKing, move) {
 	return board;
 }
 
-//write a function that check if the user can jump again
-// export function canJumpAgain(board, rowIndex, columnIndex, color, isKing) {
-// 	const legalMoves = getLegalMoves(board, rowIndex, columnIndex, color, isKing);
-// 	for (const move of legalMoves) {
-// 		if (Math.abs(move[0] - rowIndex) === 2) return true;
-// 	}
-// 	return false;
-// }
-
 export function countPieces(board) {
 	let redPieces = 0;
 	let blackPieces = 0;
@@ -108,7 +119,6 @@ export function countPieces(board) {
 }
 
 export function checkIfWin(board, color) {
-	console.log(board);
 	if (board.length === 0) return false;
 	const { redPieces, blackPieces } = countPieces(board);
 	if (color === 'red' && redPieces === 0) return 'lose';
@@ -127,10 +137,9 @@ function checkIfTie(board, color) {
 	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
 		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
 			if (board[rowIndex][columnIndex].piece === color) {
-				const legalMoves = getLegalMoves(
+				const [legalMoves] = getLegalMoves(
 					board,
-					rowIndex,
-					columnIndex,
+					[rowIndex, columnIndex],
 					color,
 					board[rowIndex][columnIndex].isKing
 				);
@@ -145,16 +154,37 @@ function checkIfTie(board, color) {
 	return false;
 }
 
+export function AiRandomMove(board) {
+	let pieces = [];
+	let piece = null;
+	let legalMoves = [];
+	let move = null;
+
+	while (legalMoves.length === 0) {
+		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+				if (board[rowIndex][columnIndex].piece === 'black') {
+					pieces.push([rowIndex, columnIndex]);
+				}
+			}
+		}
+		if (pieces.length === 0) return null;
+		piece = pieces[Math.floor(Math.random() * pieces.length)];
+		[legalMoves] = getLegalMoves(board, piece, 'black', board[piece[0]][piece[1]].isKing);
+		move = legalMoves[Math.floor(Math.random() * legalMoves.length)];
+	}
+	return [piece, move];
+}
+
 function AiMove(board, color) {
 	let bestMove = null;
 	let bestScore = -Infinity;
 	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
 		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
 			if (board[rowIndex][columnIndex].piece === color) {
-				const legalMoves = getLegalMoves(
+				const [legalMoves] = getLegalMoves(
 					board,
-					rowIndex,
-					columnIndex,
+					[rowIndex, columnIndex],
 					color,
 					board[rowIndex][columnIndex].isKing
 				);
@@ -191,10 +221,9 @@ function minimax(board, depth, isMaximizing, color) {
 		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
 			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
 				if (board[rowIndex][columnIndex].piece === color) {
-					const legalMoves = getLegalMoves(
+					const [legalMoves] = getLegalMoves(
 						board,
-						rowIndex,
-						columnIndex,
+						[rowIndex, columnIndex],
 						color,
 						board[rowIndex][columnIndex].isKing
 					);
@@ -219,10 +248,10 @@ function minimax(board, depth, isMaximizing, color) {
 		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
 			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
 				if (board[rowIndex][columnIndex].piece === color) {
-					const legalMoves = getLegalMoves(
+					const [legalMoves] = getLegalMoves(
 						board,
-						rowIndex,
-						columnIndex,
+						[rowIndex, columnIndex],
+
 						color,
 						board[rowIndex][columnIndex].isKing
 					);

@@ -11,6 +11,7 @@ function CheckerBoard({
 	squareClickHandler,
 	makeMove,
 	myTurn,
+	userColor,
 	legalMoves,
 	chosenPiece,
 	resetFunc,
@@ -25,7 +26,7 @@ function CheckerBoard({
 							data={square}
 							rowIndex={rowIndex}
 							columnIndex={columnIndex}
-							clickable={myTurn === square.piece}
+							clickable={myTurn && userColor === square.piece}
 							isKing={square.isKing}
 							chosenPiece={
 								chosenPiece &&

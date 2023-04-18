@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
 import GameCard from '../GameCard';
-// import Level from './Level';
+import Level from '../TicTacToe/Level';
 import GamePlay from './GamePlay';
 import Result from '../TicTacToe/Result';
 
 export default function Checkers() {
-	const [gameType, setGameType] = useState('person');
+	const [gameType, setGameType] = useState('');
 	const [level, setLevel] = useState();
 	const [winner, setWinner] = useState();
 
@@ -20,12 +20,11 @@ export default function Checkers() {
 			<GameCard setter={setGameType} name='VS Person' />
 			<GameCard setter={setGameType} name='VS AI' />
 		</>
-	) : // ) : gameType === 'VS AI' && !level ? (
-	// 	<Level setLevel={setLevel} />
-	!winner ? (
+	) : gameType === 'VS AI' && !level ? (
+		<Level setLevel={setLevel} />
+	) : !winner ? (
 		<GamePlay
 			level={level || 'person'}
-			// level={'AI'}
 			resetLevel={resetLevel}
 			winner={winner}
 			setWinner={setWinner}
