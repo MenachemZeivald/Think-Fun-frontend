@@ -6,54 +6,68 @@ import ResetBtn from '../TicTacToe/ResetBtn';
 import Icon from '../Icon';
 import ChatBox from '../TicTacToe/ChatBox';
 
-export default function Board({ board, makeTurn, myTurn, winArr = [], resetFunc }) {
+function CheckerBoard({
+	board,
+	squareClickHandler,
+	makeMove,
+	myTurn,
+	userColor,
+	legalMoves,
+	chosenPiece,
+	resetFunc,
+}) {
 	return (
 		<LayoutStyle>
-			<BoardStyle>
-				{board.map((place, i) => {
-					return (
+			<Board>
+				{board.map((row, rowIndex) =>
+					row.map((square, columnIndex) => (
 						<Square
-							key={i}
-							place={place}
-							index={i}
-							clickable={myTurn}
-							clickHandler={makeTurn}
-							findInWinArr={winArr.includes(i)}
-						></Square>
-					);
-				})}
-			</BoardStyle>
+							key={`${rowIndex}-${columnIndex}`}
+							data={square}
+							rowIndex={rowIndex}
+							columnIndex={columnIndex}
+							clickable={myTurn && userColor === square.piece}
+							isKing={square.isKing}
+							chosenPiece={
+								chosenPiece &&
+								chosenPiece[0] === rowIndex &&
+								chosenPiece[1] === columnIndex
+							}
+							legalMove={legalMoves.some(
+								move => move[0] === rowIndex && move[1] === columnIndex
+							)}
+							squareClickHandler={() =>
+								squareClickHandler(rowIndex, columnIndex, square)
+							}
+							makeMove={() => makeMove(rowIndex, columnIndex)}
+						/>
+					))
+				)}
+			</Board>
 			<ChatBox />
 			<FooterStyle>
 				<Icon to text={'question_mark'} />
-				<ResetBtn resetFunc={resetFunc} clickable={winArr.length} />
+				<ResetBtn resetFunc={resetFunc} />
 				<Icon to text={'chat'} />
 			</FooterStyle>
 		</LayoutStyle>
 	);
 }
 
+export default CheckerBoard;
+
+const Board = styled.div`
+	display: grid;
+	grid-template-columns: repeat(8, 9vh);
+	grid-template-rows: repeat(8, 9vh);
+	border: 5px solid var(--pink);
+	border-radius: 1%;
+`;
+
 const LayoutStyle = styled.div`
 	display: grid;
 	place-items: center;
 	gap: 0.5em;
-`;
-
-const BoardStyle = styled.div`
-	max-width: 75vh;
-	width: 80vmin;
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	grid-template-rows: repeat(3, 1fr);
-	margin: 0 auto;
-	margin-top: 20px;
-	border: 3px solid var(--pink);
-	background-color: var(--yellow);
-	@media (max-device-width: 768px) {
-		width: 97vw;
-		margin-top: 10vh;
-		margin-bottom: 5vh;
-	}
 `;
 
 const FooterStyle = styled.div`

@@ -6,61 +6,62 @@ import GamePlay from './GamePlay';
 import Result from '../TicTacToe/Result';
 
 export default function MatchingGame() {
-  const [categoryArr, setCategoryArr] = useState([]);
-  const [gameType, setGameType] = useState('');
-  const [choosenCategory, setChoosenCategory] = useState('');
-  const [winner, setWinner] = useState('');
+	const [categoryArr, setCategoryArr] = useState([]);
+	const [gameType, setGameType] = useState('');
+	const [choosenCategory, setChoosenCategory] = useState('');
+	const [winner, setWinner] = useState('');
 
-  useEffect(() => {
-    getCategories();
-  }, []);
+	useEffect(() => {
+		getCategories();
+	}, []);
 
-  const setCategoryById = (categoryName) => {
-    let categoryId = categoryArr.filter((categoryObj) => categoryObj.name === categoryName)[0];
-    setChoosenCategory(categoryId.category_id);
-  };
+	const setCategoryById = categoryName => {
+		let categoryId = categoryArr.filter(categoryObj => categoryObj.name === categoryName)[0];
+		setChoosenCategory(categoryId.category_id);
+	};
 
-  const getCategories = async () => {
-    try {
-      const response = await axios.get(`/categories/`);
-      setCategoryArr(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+	const getCategories = async () => {
+		try {
+			const response = await axios.get(`/categories/`);
+			setCategoryArr(response.data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
-  if (!gameType) {
-    return (
-      <>
-        <GameCard setter={setGameType} name='VS Person' />
-        <GameCard setter={setGameType} name='VS AI' />
-      </>
-    );
-  }
-  if (!choosenCategory && gameType === 'VS Person') {
-    let randomCategory = categoryArr[Math.floor(Math.random() * categoryArr.length)].category_id;
-    setChoosenCategory(randomCategory);
-  }
-  if (!choosenCategory) {
-    return (
-      <>
-        {categoryArr.map((item) => (
-          <GameCard key={item._id} setter={setCategoryById} name={item.name} />
-        ))}
-      </>
-    );
-  }
-  if (!winner) {
-    return <GamePlay gameType={gameType} category={choosenCategory} setWinner={setWinner} />;
-  }
-  return (
-    <Result
-      res={winner}
-      resetBoard={() => setWinner(false)}
-      typeGame={'matching_game'}
-      //TO DO chang to real level
-      level={'hard'}
-      isOnline={gameType === 'VS person'}
-    />
-  );
+	if (!gameType) {
+		return (
+			<>
+				<GameCard setter={setGameType} name='VS Person' />
+				<GameCard setter={setGameType} name='VS AI' />
+			</>
+		);
+	}
+	if (!choosenCategory && gameType === 'VS Person') {
+		let randomCategory =
+			categoryArr[Math.floor(Math.random() * categoryArr.length)].category_id;
+		setChoosenCategory(randomCategory);
+	}
+	if (!choosenCategory) {
+		return (
+			<>
+				{categoryArr.map(item => (
+					<GameCard key={item._id} setter={setCategoryById} name={item.name} />
+				))}
+			</>
+		);
+	}
+	if (!winner) {
+		return <GamePlay gameType={gameType} category={choosenCategory} setWinner={setWinner} />;
+	}
+	return (
+		<Result
+			res={winner}
+			resetBoard={() => setWinner(false)}
+			typeGame={'matching_game'}
+			//TO DO chang to real level
+			level={'hard'}
+			isOnline={gameType === 'VS person'}
+		/>
+	);
 }
