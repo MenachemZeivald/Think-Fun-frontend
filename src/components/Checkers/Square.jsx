@@ -7,6 +7,7 @@ export default function Square({
 	columnIndex,
 	legalMove,
 	chosenPiece,
+	userColor,
 	makeMove,
 	squareClickHandler,
 	clickable,
@@ -20,7 +21,14 @@ export default function Square({
 			legalMove={legalMove}
 			chosenPiece={chosenPiece}
 		>
-			{data.piece && <PieceStyle isKing={isKing} color={data.piece} />}
+			{data.piece && <PieceStyle color={data.piece} />}
+			{isKing && (
+				<KingStyle
+					color={data.piece}
+					userColor={userColor}
+					className='fas fa-crown'
+				></KingStyle>
+			)}
 		</SquareStyle>
 	);
 }
@@ -44,6 +52,12 @@ const PieceStyle = styled.div`
 	width: 7vh;
 	height: 7vh;
 	background-color: ${p => p.color};
-	border: ${p => p.isKing && '4px double #fff'};
 	border-radius: 50%;
+`;
+
+const KingStyle = styled.i`
+	color: ${p => (p.color === 'red' ? 'black' : 'white')};
+	font-size: 2em;
+	transform: rotate(${p => (p.userColor === 'red' ? '180deg' : '0deg')});
+	position: absolute;
 `;

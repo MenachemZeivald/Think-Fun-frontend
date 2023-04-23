@@ -14,7 +14,7 @@ export default function Checkers() {
 		setWinner();
 		setLevel();
 	}
-
+	console.log('level', level);
 	return !gameType ? (
 		<>
 			<GameCard setter={setGameType} name='VS Person' />
@@ -32,7 +32,7 @@ export default function Checkers() {
 	) : (
 		<Result
 			res={winner}
-			resetLevel={resetLevel}
+			resetLevel={gameType === 'VS AI' && resetLevel}
 			resetBoard={() => setWinner()}
 			typeGame={'checkers'}
 			isOnline={gameType !== 'VS AI'}

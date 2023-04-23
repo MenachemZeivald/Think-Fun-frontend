@@ -6,9 +6,16 @@ import ResetBtn from './ResetBtn';
 import Icon from '../Icon';
 import ChatBox from './ChatBox';
 
-export default function Board({ board, makeTurn, myTurn, winArr = [], resetFunc, vsPerson }) {
+export default function Board({
+	board,
+	makeTurn,
+	socketID,
+	myTurn,
+	winArr = [],
+	resetFunc,
+	vsPerson,
+}) {
 	const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
-	// TODO: buttons just when needed, person or AI
 	return (
 		<LayoutStyle>
 			<BoardStyle>
@@ -18,20 +25,30 @@ export default function Board({ board, makeTurn, myTurn, winArr = [], resetFunc,
 							key={i}
 							place={place}
 							index={i}
-							clickable={myTurn}
+							clickable={myTurn && !winArr.length}
 							clickHandler={makeTurn}
 							findInWinArr={winArr.includes(i)}
 						></Square>
 					);
 				})}
 			</BoardStyle>
-			<ChatBox blurHandler={() => setIsChatBoxOpen(false)} isOpen={isChatBoxOpen} />
-			<FooterStyle justify={vsPerson}>
-				{vsPerson ? <Icon text={'question_mark'} /> : null}
-				<ResetBtn resetFunc={resetFunc} clickable={winArr.length} />
-				{vsPerson ? (
-					<Icon text={'chat'} clickHandler={() => setIsChatBoxOpen(true)} />
-				) : null}
+			{vsPerson && (
+				<ChatBox
+					socketID={socketID}
+					closeChatBoxFunc={() => setIsChatBoxOpen(false)}
+					isOpen={isChatBoxOpen}
+					setIsOpen={setIsChatBoxOpen}
+				/>
+			)}
+			<FooterStyle vsPerson={vsPerson}>
+				{vsPerson && <Icon text={'question_mark'} />}
+				{vsPerson || <ResetBtn resetFunc={resetFunc} clickable={winArr.length} />}
+				{vsPerson && (
+					<Icon
+						text={'chat'}
+						clickHandler={() => setIsChatBoxOpen(isChatBoxOpen => !isChatBoxOpen)}
+					/>
+				)}
 			</FooterStyle>
 		</LayoutStyle>
 	);
@@ -63,6 +80,6 @@ const BoardStyle = styled.div`
 const FooterStyle = styled.div`
 	width: 100%;
 	display: flex;
-	justify-content: ${p => (p.justify ? 'space-between' : 'center')};
+	justify-content: ${p => (p.vsPerson ? 'space-between' : 'center')};
 	align-items: center;
 `;

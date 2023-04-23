@@ -1,84 +1,102 @@
-import React, { useRef, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
+import React, { useRef, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
-export default function ChatBox({ blurHandler, isOpen }) {
+import useAuth from '../../hooks/useAuth';
+
+export default function ChatBox({ socketID, closeChatBoxFunc, isOpen, setIsOpen }) {
+	const [messages, setMessages] = useState([]);
+	const [input, setInput] = useState('');
+	const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+	const [socket, id_room] = socketID;
 	const divRef = useRef(null);
+
+	const { Auth } = useAuth();
 
 	useEffect(() => {
 		if (isOpen) {
-			divRef.current.focus();
+			setTimeout(() => {
+				setIsDetailsOpen(true);
+			}, 500);
+		} else {
+			setIsDetailsOpen(false);
 		}
 	}, [isOpen]);
 
+	useEffect(() => {
+		if (isDetailsOpen) {
+			divRef.current.focus();
+		}
+	}, [isDetailsOpen]);
+
+	useEffect(() => {
+		if (socket) {
+			socket.on('receiver-message', message => {
+				setMessages(messages => {
+					return [...messages, { text: message.text, isSender: false }];
+				});
+				if (!isOpen) {
+					setIsOpen(true);
+				}
+			});
+		}
+	}, [socket]);
+
+	const sendMessage = e => {
+		if (e.type === 'click' || e.key === 'Enter') {
+			e.preventDefault();
+			if (input !== '') {
+				setMessages([...messages, { text: input, isSender: true }]);
+				setInput('');
+				socket.emit('send-message', { text: input, id_room });
+			}
+		}
+	};
+
 	return (
-		<ChatBoxStyle tabIndex={-1} ref={divRef} onBlur={blurHandler} isOpen={isOpen}>
-			{isOpen && (
+		<ChatBoxStyle tabIndex={-1} isOpen={isOpen}>
+			{isDetailsOpen && (
 				<>
 					<ChatHeaderStyle>
-						<span>Chat Box</span>
-						<span>X</span>
+						{Auth ? <span>{Auth.name}</span> : <span>Chat Box</span>}
+						<span onClick={closeChatBoxFunc}>X</span>
 					</ChatHeaderStyle>
 					<ChatBodyStyle>
-						<ChatMessageStyle>
-							<ChatBubbleStyle isSender={false}>
-								<span>Hello!</span>
-							</ChatBubbleStyle>
-						</ChatMessageStyle>
-						<ChatMessageStyle>
-							<ChatBubbleStyle isSender={true}>
-								<span>Hi there!</span>
-							</ChatBubbleStyle>
-						</ChatMessageStyle>
+						{messages.map((message, i) => {
+							return (
+								<ChatBubbleStyle isSender={message.isSender}>
+									{message.text}
+								</ChatBubbleStyle>
+							);
+						})}
 					</ChatBodyStyle>
-					<InputFieldStyle placeholder='Type your message here...' />
+					<InputFieldStyle
+						value={input}
+						ref={divRef}
+						onChange={e => setInput(e.target.value)}
+						placeholder='Type your message here...'
+						onKeyPress={sendMessage}
+					/>
+					<SendBtnStyle className='material-symbols-outlined' onClick={sendMessage}>
+						Send
+					</SendBtnStyle>
 				</>
 			)}
 		</ChatBoxStyle>
 	);
 }
 
-const openAnim = keyframes`
-	0% {
-		
-	}
-	30% {
-		height: 50px;
-		width: 300px;
-	}
-	100% {
-		height: 400px;
-		width: 300px;
-	}
-`;
-
-const closeAnim = keyframes`
-	0% {
-		width: 300px;
-	}
-	70% {
-		height: 50px;
-	}
-	99% {
-		
-	}
-	100% {
-		height: 0;
-		width: 0;
-		
-	}
-`;
-
 const ChatBoxStyle = styled.div`
 	position: absolute;
 	left: 74vw;
-	top: 40%;
+	bottom: 0;
 	display: flex;
 	flex-direction: column;
-	height: 0;
-	width: 0;
+	height: ${p => (p.isOpen ? '400px' : '0')};
+	width: 300px;
 	border-radius: 10px;
 	background-color: #f5f5f5;
-	animation: ${p => (p.isOpen ? openAnim : closeAnim)} 0.5s ease-in forwards;
+	transition: height 0.5s ease-in-out;
+	overflow: hidden;
 	&:focus {
 		outline: none;
 	}
@@ -93,26 +111,45 @@ const ChatHeaderStyle = styled.div`
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
 	background-color: #e6e6e6;
+	cursor: default;
+	span:nth-child(2) {
+		font-size: 1.5rem;
+		font-weight: 600;
+		cursor: pointer;
+	}
 `;
 
 const ChatBodyStyle = styled.div`
 	display: flex;
-	flex-direction: column-reverse;
+	flex-direction: column;
 	padding: 20px;
+	height: calc(100% - 100px);
+	overflow-y: auto;
+	overflow-x: hidden;
+	::-webkit-scrollbar {
+		width: 0.5rem;
+	}
+	::-webkit-scrollbar-track {
+		background-color: #f1f1f1;
+	}
+	::-webkit-scrollbar-thumb {
+		background-color: #888;
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background-color: #555;
+	}
 `;
-
-const ChatMessageStyle = styled.div``;
 
 const ChatBubbleStyle = styled.div`
 	display: inline-block;
-	position: relative;
-	max-width: calc(100% - 60px);
+	width: fit-content;
+	max-width: 60%;
 	margin-bottom: 0.5rem;
 	padding: 0.5rem 0.75rem;
-	border-radius: ${props => (props.isSender ? '1rem .5rem .5rem' : '.5rem 1rem .5rem')};
-	background-color: ${props => (props.isSender ? '#dcf8c6' : '#fff')};
-	color: ${props => (props.isSender ? '#000' : '#1b1b1b')};
-	right: ${props => (props.isSender ? '0' : '-200px')};
+	border-radius: ${p => (p.isSender ? '.5rem .5rem 1rem .5rem' : '.5rem .5rem .5rem 1rem')};
+	background-color: ${p => (p.isSender ? '#dcf8c6' : '#fff')};
+	color: ${p => (p.isSender ? '#000' : '#1b1b1b')};
+	margin-left: ${p => (p.isSender ? '0' : 'auto')};
 `;
 
 const InputFieldStyle = styled.input`
@@ -124,7 +161,27 @@ const InputFieldStyle = styled.input`
 	font-size: 0.9rem;
 	border-top: solid #e6e6e6 0.5px;
 	position: absolute;
-	bottom: -1rem;
+	bottom: 0;
 	border-bottom-left-radius: 0.5rem;
 	border-bottom-right-radius: 0.5rem;
+`;
+
+const SendBtnStyle = styled.button`
+	height: 50px;
+	width: 50px;
+	border: none;
+	outline: none;
+	padding-left: 0.5rem;
+	font-size: 2rem;
+	border-top: solid #e6e6e6 0.5px;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	border-bottom-left-radius: 0.5rem;
+	border-bottom-right-radius: 0.5rem;
+	background-color: #e6e6e6;
+	cursor: pointer;
+	&:hover {
+		background-color: #d9d9d9;
+	}
 `;

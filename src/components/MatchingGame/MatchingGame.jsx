@@ -3,11 +3,13 @@ import axios from '../../api/axios';
 
 import GameCard from '../GameCard';
 import GamePlay from './GamePlay';
+import LevelSlider from './LevelSlider';
 import Result from '../TicTacToe/Result';
 
 export default function MatchingGame() {
 	const [categoryArr, setCategoryArr] = useState([]);
 	const [gameType, setGameType] = useState('');
+	const [level, setLevel] = useState('');
 	const [choosenCategory, setChoosenCategory] = useState('');
 	const [winner, setWinner] = useState('');
 
@@ -28,7 +30,7 @@ export default function MatchingGame() {
 			console.log(error);
 		}
 	};
-  
+
 	if (!gameType) {
 		return (
 			<>
@@ -42,9 +44,10 @@ export default function MatchingGame() {
 			categoryArr[Math.floor(Math.random() * categoryArr.length)].category_id;
 		setChoosenCategory(randomCategory);
 	}
-	if (!choosenCategory) {
+	if (gameType !== 'VS Person' && (!choosenCategory || !level)) {
 		return (
 			<>
+				<LevelSlider level={level} setLevel={setLevel} />
 				{categoryArr.map(item => (
 					<GameCard key={item._id} setter={setCategoryById} name={item.name} />
 				))}
@@ -52,15 +55,21 @@ export default function MatchingGame() {
 		);
 	}
 	if (!winner) {
-		return <GamePlay gameType={gameType} category={choosenCategory} setWinner={setWinner} />;
+		return (
+			<GamePlay
+				level={level}
+				gameType={gameType}
+				category={choosenCategory}
+				setWinner={setWinner}
+			/>
+		);
 	}
 	return (
 		<Result
 			res={winner}
 			resetBoard={() => setWinner(false)}
 			typeGame={'matching_game'}
-			//TO DO chang to real level
-			level={'hard'}
+			level={gameType === 'VS Person' ? 'hard' : level}
 			isOnline={gameType === 'VS person'}
 		/>
 	);
