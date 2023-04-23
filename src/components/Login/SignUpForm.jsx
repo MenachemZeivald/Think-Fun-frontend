@@ -90,7 +90,7 @@ export default function SignUpForm({ toggle }) {
       setAuth({
         name,
         role,
-        profilePic: img_url || DEFAULT_PROFILE_IMG,
+        profilePic: img_url,
         accessToken,
       });
       notify('success', 'success');

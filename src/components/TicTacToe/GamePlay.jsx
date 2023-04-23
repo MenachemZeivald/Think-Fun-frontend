@@ -10,7 +10,8 @@ export default function GamePlay({ level, winner, setWinner }) {
   const CONNECTED = 1;
   const DISCONNECTED = -1;
   const WAITING_FOR_CONNECT = 0;
-
+  
+  const [socket] = useState(io(BASE_URL));
   const [board, setBoard] = useState([' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']);
   const [userSign, setUserSign] = useState(level === 'person' ? null : 'X');
   const [connection, setConnection] = useState(WAITING_FOR_CONNECT);
