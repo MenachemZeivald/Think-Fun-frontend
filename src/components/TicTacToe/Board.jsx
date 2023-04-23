@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from '../../api/axios';
 
-import axios from '../../api/axios';
 import Square from './Square';
 import ResetBtn from './ResetBtn';
 import Icon from '../Icon';
