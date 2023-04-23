@@ -18,26 +18,38 @@ export default function GamePlay({ level, winner, setWinner }) {
 
   let myTurn = isMyTurn(board, userSign);
 
-  useEffect(() => {
-    if (level === 'person') {
-      socket.on('connect', () => console.log(socket.id));
-      //add name and image
-      socket.emit('start-tic-tac-toe');
-      socket.on('game-started', (room) => {
-        setConnection(CONNECTED);
-        setGameObj(room);
-        setUserSign(socket.id === room.idPlayer1 ? 'X' : 'O');
-        socket.emit('join-room', room.id_room);
-      });
-      return () => {
-        socket.emit('disconnected');
-      };
-    }
-  }, []);
+	useEffect(() => {
+		if (level === 'person') {
+			socket.on('connect', () => console.log(socket.id));
+			socket.emit('start-tic-tac-toe');
+			socket.on('game-started', room => {
+				setConnection(CONNECTED);
+				setGameObj(room);
+				setUserSign(socket.id === room.idPlayer1 ? 'X' : 'O');
+				socket.emit('join-room', room.id_room);
+			});
+			return () => {
+				socket.emit('disconnected');
+			};
+		}
+	}, []);
 
-  useEffect(() => {
-    console.log('CHANGE');
-  }, [userSign]);
+	useEffect(() => {
+		if (level === 'person') {
+			socket.on('active-game', gameObgReceive => {
+				let index = gameObgReceive.index;
+				let sign = socket.id === gameObgReceive.idPlayer1 ? 'O' : 'X';
+				setBoard(prevBoard => {
+					let tempBoard = [...prevBoard];
+					tempBoard[index] = sign;
+					return tempBoard;
+				});
+			});
+			socket.on('user-left', () => {
+				setConnection(DISCONNECTED);
+			});
+		}
+	}, [socket]);
 
   useEffect(() => {
     if (level === 'person') {
@@ -61,30 +73,19 @@ export default function GamePlay({ level, winner, setWinner }) {
     }
   }, [socket]);
 
-  useEffect(() => {
-    if (!res && !myTurn) {
-      setTimeout(() => {
-        makeTurn(AIturn(board, level), 'O');
-      }, 150);
-    }
-    // eslint-disable-next-line
-  }, [myTurn]);
-
-
-  function makeTurn(index, sign) {
-    if (level === 'person') {
-      sign = userSign;
-    }
-    setBoard((prevBoard) => {
-      let tempBoard = [...prevBoard];
-      tempBoard[index] = sign || 'X';
-      return tempBoard;
-    });
-    if (level === 'person') {
-      socket.emit('active-game', { ...gameObj, index });
-      console.log(gameObj);
-    }
-  }
+	function makeTurn(index, sign) {
+		if (level === 'person') {
+			sign = userSign;
+		}
+		setBoard(prevBoard => {
+			let tempBoard = [...prevBoard];
+			tempBoard[index] = sign || 'X';
+			return tempBoard;
+		});
+		if (level === 'person') {
+			socket.emit('active-game', { ...gameObj, index });
+		}
+	}
 
   function resetBoard() {
     setBoard([' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']);
@@ -107,5 +108,17 @@ export default function GamePlay({ level, winner, setWinner }) {
     return <h1>user left</h1>;
   }
 
-  return <Board board={board} setBoard={setBoard} userSign={userSign} makeTurn={makeTurn} myTurn={myTurn} winArr={winArr} resetFunc={resetBoard} vsPerson={level === 'person'} />;
+	return (
+		<Board
+			board={board}
+			setBoard={setBoard}
+			userSign={userSign}
+			makeTurn={makeTurn}
+			socketID={gameObj && [socket, gameObj.id_room]}
+			myTurn={myTurn}
+			winArr={winArr}
+			resetFunc={resetBoard}
+			vsPerson={level === 'person'}
+		/>
+	);
 }
