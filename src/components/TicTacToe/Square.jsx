@@ -24,7 +24,7 @@ const SquareStyle = styled(DefaultStyle)`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	font-size: 19vmin;
+	font-size: 15vmin;
 	color: ${p => p.findInWinArr && 'white'};
 	-webkit-text-stroke: ${p => p.findInWinArr && 'var(--Dblue) 5px'};
 	transition: all 0.7s;

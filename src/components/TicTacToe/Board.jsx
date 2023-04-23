@@ -26,7 +26,7 @@ export default function Board({ board, setBoard, makeTurn, myTurn, winArr = [], 
       console.log(error.response.data);
     }
   };
-  // TODO: buttons just when needed, person or AI
+  
   return (
     <LayoutStyle>
       <BoardStyle>
@@ -68,8 +68,8 @@ const BoardStyle = styled.div`
 `;
 
 const FooterStyle = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: ${(p) => (p.justify ? 'space-between' : 'center')};
-  align-items: center;
+	width: 100%;
+	display: flex;
+	justify-content: ${p => (p.vsPerson ? 'space-between' : 'center')};
+	align-items: center;
 `;

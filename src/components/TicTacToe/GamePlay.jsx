@@ -6,8 +6,6 @@ import Board from './Board';
 
 import { AIturn, checkIfWin, findWinArr, isMyTurn } from './functions';
 
-const socket = io.connect(BASE_URL);
-
 export default function GamePlay({ level, winner, setWinner }) {
   const CONNECTED = 1;
   const DISCONNECTED = -1;
@@ -109,5 +107,5 @@ export default function GamePlay({ level, winner, setWinner }) {
     return <h1>user left</h1>;
   }
 
-  return <Board board={board}  setBoard={setBoard} userSign={userSign} makeTurn={makeTurn} myTurn={myTurn}  winArr={winArr} resetFunc={resetBoard} vsPerson={level === 'person'} />;
+  return <Board board={board} setBoard={setBoard} userSign={userSign} makeTurn={makeTurn} myTurn={myTurn} winArr={winArr} resetFunc={resetBoard} vsPerson={level === 'person'} />;
 }

@@ -1,8 +1,6 @@
 export function getLegalMoves(board, currPosition, color, isKing) {
 	const [rowIndex, columnIndex] = currPosition;
 	const legalMoves = [];
-	const jumpMoves = [];
-	const doubleJumpMoves = [];
 	const moveDirections = isKing ? [-1, 1] : [color === 'red' ? 1 : -1];
 
 	// Check legal moves in all directions
@@ -23,19 +21,15 @@ export function getLegalMoves(board, currPosition, color, isKing) {
 		let jumpLeft = true;
 		if (checkJump(board, moveDir, [rowIndex, columnIndex], color, jumpLeft)) {
 			legalMoves.push([rowIndex + moveDir * 2, columnIndex - 2]);
-			jumpMoves.push([rowIndex + moveDir * 2, columnIndex - 2]);
 		}
 
 		jumpLeft = false;
 		if (checkJump(board, moveDir, [rowIndex, columnIndex], color, jumpLeft)) {
 			legalMoves.push([rowIndex + moveDir * 2, columnIndex + 2]);
-			jumpMoves.push([rowIndex + moveDir * 2, columnIndex + 2]);
 		}
 	}
 
-	// if (jumpMoves.length > 0) doubleJumpMoves.push(...getLegalJumpMoves(board, jumpMoves, color));
-
-	return [legalMoves, doubleJumpMoves];
+	return legalMoves;
 }
 
 const checkMove = (board, row, col) => {
@@ -63,29 +57,6 @@ const checkJump = (board, moveDir, currPosition, color, jumpLeft) => {
 	);
 };
 
-const getLegalJumpMoves = (board, jumpMoves, color) => {
-	console.log('jumpMoves', jumpMoves);
-	let doubleJumpMoves = [];
-	for (const move of jumpMoves) {
-		const [row, col] = move;
-		const moveDirections = [1, -1];
-		for (const moveDir of moveDirections) {
-			let jumpLeft = true;
-			if (checkJump(board, moveDir, [row, col], color, jumpLeft)) {
-				doubleJumpMoves.push([row + moveDir * 2, col - 2]);
-			}
-			jumpLeft = false;
-			if (checkJump(board, moveDir, [row, col], color, jumpLeft)) {
-				doubleJumpMoves.push([row + moveDir * 2, col + 2]);
-			}
-		}
-	}
-	if (doubleJumpMoves.length > 0) {
-		doubleJumpMoves = doubleJumpMoves.concat(getLegalJumpMoves(board, doubleJumpMoves, color));
-	}
-	return doubleJumpMoves;
-};
-
 export function movePiece(board, rowIndex, columnIndex, color, isKing, move) {
 	// Check if the move is a jump
 	if (Math.abs(move[0] - rowIndex) === 2) {
@@ -93,6 +64,7 @@ export function movePiece(board, rowIndex, columnIndex, color, isKing, move) {
 		const jumpedRow = (move[0] + rowIndex) / 2;
 		const jumpedCol = (move[1] + columnIndex) / 2;
 		board[jumpedRow][jumpedCol].piece = null;
+		board[jumpedRow][jumpedCol].isKing = null;
 	}
 
 	// Check if the piece has become a king
@@ -100,6 +72,7 @@ export function movePiece(board, rowIndex, columnIndex, color, isKing, move) {
 
 	// Move the piece
 	board[rowIndex][columnIndex].piece = null;
+	board[rowIndex][columnIndex].isKing = null;
 	board[move[0]][move[1]].piece = color;
 	board[move[0]][move[1]].isKing = isKing;
 
@@ -125,7 +98,13 @@ export function checkIfWin(board, color) {
 	if (color === 'red' && blackPieces === 0) return 'win';
 	if (color === 'black' && redPieces === 0) return 'win';
 	if (color === 'black' && blackPieces === 0) return 'lose';
-	if (checkIfTie(board, color)) return 'tie';
+	if (checkIfTie(board, color)) {
+		if (color === 'red' && redPieces > blackPieces) return 'win';
+		if (color === 'red' && redPieces < blackPieces) return 'lose';
+		if (color === 'black' && redPieces > blackPieces) return 'lose';
+		if (color === 'black' && redPieces < blackPieces) return 'win';
+		if (redPieces === blackPieces) return 'tie';
+	}
 	return false;
 }
 
@@ -133,47 +112,72 @@ function checkIfTie(board, color) {
 	const { redPieces, blackPieces } = countPieces(board);
 	if (redPieces === 1 && blackPieces === 1) return true;
 
-	let canMove = false;
 	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
 		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
 			if (board[rowIndex][columnIndex].piece === color) {
-				const [legalMoves] = getLegalMoves(
+				const legalMoves = getLegalMoves(
 					board,
 					[rowIndex, columnIndex],
 					color,
 					board[rowIndex][columnIndex].isKing
 				);
-				if (legalMoves.length > 0) {
-					canMove = true;
-					break;
-				}
+				if (legalMoves.length > 0) return false;
 			}
 		}
 	}
-	if (!canMove) return 'tie';
-	return false;
+	return true;
 }
 
-export function AiRandomMove(board) {
-	let pieces = [];
-	let piece = null;
-	let legalMoves = [];
-	let move = null;
+function AiRandomMove(board) {
+	if (board.length === 0) return [null];
 
-	while (legalMoves.length === 0) {
-		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
-			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
-				if (board[rowIndex][columnIndex].piece === 'black') {
-					pieces.push([rowIndex, columnIndex]);
-				}
+	let pieces = {};
+
+	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+			if (board[rowIndex][columnIndex].piece === 'black') {
+				pieces[[rowIndex, columnIndex]] = getLegalMoves(
+					board,
+					[rowIndex, columnIndex],
+					'black',
+					board[rowIndex][columnIndex].isKing
+				);
+			}
+			if (pieces[[rowIndex, columnIndex]] && pieces[[rowIndex, columnIndex]].length === 0)
+				delete pieces[[rowIndex, columnIndex]];
+		}
+	}
+
+	if (Object.keys(pieces).length === 0) return [null];
+
+	let piece = Object.keys(pieces)[Math.floor(Math.random() * Object.keys(pieces).length)];
+	piece = piece.split(',').map(num => parseInt(num));
+	let move = pieces[piece][Math.floor(Math.random() * pieces[piece].length)];
+	return [piece, move];
+}
+
+function AiTryToEat(board) {
+	let pieces = [];
+	let legalMoves = [];
+
+	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+			if (board[rowIndex][columnIndex].piece === 'black') {
+				pieces.push([rowIndex, columnIndex]);
 			}
 		}
-		if (pieces.length === 0) return null;
-		piece = pieces[Math.floor(Math.random() * pieces.length)];
-		[legalMoves] = getLegalMoves(board, piece, 'black', board[piece[0]][piece[1]].isKing);
-		move = legalMoves[Math.floor(Math.random() * legalMoves.length)];
 	}
-	return [piece, move];
+	if (pieces.length === 0) return null;
+
+	for (const piece of pieces) {
+		legalMoves = getLegalMoves(board, piece, 'black', board[piece[0]][piece[1]].isKing);
+		for (const move of legalMoves) {
+			if (Math.abs(move[0] - piece[0]) === 2) {
+				return [piece, move];
+			}
+		}
+	}
+	return null;
 }
 
 function AiMove(board, color) {
@@ -182,7 +186,7 @@ function AiMove(board, color) {
 	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
 		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
 			if (board[rowIndex][columnIndex].piece === color) {
-				const [legalMoves] = getLegalMoves(
+				const legalMoves = getLegalMoves(
 					board,
 					[rowIndex, columnIndex],
 					color,
@@ -221,7 +225,7 @@ function minimax(board, depth, isMaximizing, color) {
 		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
 			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
 				if (board[rowIndex][columnIndex].piece === color) {
-					const [legalMoves] = getLegalMoves(
+					const legalMoves = getLegalMoves(
 						board,
 						[rowIndex, columnIndex],
 						color,
@@ -248,7 +252,7 @@ function minimax(board, depth, isMaximizing, color) {
 		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
 			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
 				if (board[rowIndex][columnIndex].piece === color) {
-					const [legalMoves] = getLegalMoves(
+					const legalMoves = getLegalMoves(
 						board,
 						[rowIndex, columnIndex],
 
@@ -274,7 +278,9 @@ function minimax(board, depth, isMaximizing, color) {
 	}
 }
 
-export function AiTurn(board, color) {
-	const move = AiMove(board, color);
-	return movePiece(board, move[0], move[1], color, board[move[0]][move[1]].isKing, move[2]);
+export function AiTurn(board, level, color = 'black') {
+	if (level === 'Easy') return AiRandomMove(board);
+	if (level === 'Medium') return AiTryToEat(board) || AiRandomMove(board);
+	if (level === 'Hard') return AiTryToEat(board) || AiRandomMove(board);
+	//if (level === 'hard') return AiTryToEat(board) || AiMove(board, color);
 }

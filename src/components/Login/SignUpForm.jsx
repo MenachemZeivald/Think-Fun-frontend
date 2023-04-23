@@ -5,7 +5,6 @@ import Form from './Form';
 import ProfilePic from './ProfilePic';
 import InputField from './InputField';
 import InputFile from './InputFile';
-import DEFAULT_PROFILE_IMG from '../../assets/avataaars.png';
 
 import InputButton from './InputButton';
 import { useNavigate, useLocation } from 'react-router-dom';
