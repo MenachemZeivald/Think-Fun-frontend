@@ -30,7 +30,7 @@ export default function GamePlay({ level, winner, setWinner }) {
 				socket.emit('join-room', room.id_room);
 			});
 			return () => {
-				socket.emit('aa');
+				socket.emit('disconnected');
 			};
 		}
 	}, []);
@@ -46,7 +46,7 @@ export default function GamePlay({ level, winner, setWinner }) {
 					return tempBoard;
 				});
 			});
-			socket.on('user-left', message => {
+			socket.on('user-left', () => {
 				setConnection(DISCONNECTED);
 			});
 		}
@@ -60,17 +60,6 @@ export default function GamePlay({ level, winner, setWinner }) {
 		}
 		// eslint-disable-next-line
 	}, [myTurn]);
-
-	//   const handleVisibilityChange = () => {
-	//     if (document.visibilityState === 'hidden') {
-	//       // Emit a socket event to notify the server that the user has navigated away from the app
-	//       socket.emit('aa');
-	//     }
-	//   };
-
-	//   window.addEventListener('beforeunload', () => socket.emit('aa'));
-	//   window.addEventListener('popstate', () => socket.emit('aa'));
-	//   document.addEventListener('visibilitychange', handleVisibilityChange);
 
 	function makeTurn(index, sign) {
 		if (level === 'person') {
@@ -112,6 +101,8 @@ export default function GamePlay({ level, winner, setWinner }) {
 	return (
 		<Board
 			board={board}
+			setBoard={setBoard}
+			userSign={userSign}
 			makeTurn={makeTurn}
 			socketID={gameObj && [socket, gameObj.id_room]}
 			myTurn={myTurn}

@@ -35,15 +35,8 @@ export default function GamePlay({ level, winner, setWinner }) {
 				setUserColor(socket.id === room.idPlayer1 ? 'red' : 'black');
 				socket.emit('join-room', room.id_room);
 			});
-			socket.on('disconnect', () => {
-				setConnection(DISCONNECTED);
-			});
 			return () => {
-				if (level === 'person') {
-					socket.off('connect');
-					socket.off('game-started');
-					socket.off('disconnect');
-				}
+				socket.emit('disconnected');
 			};
 		}
 	}, []);
@@ -70,9 +63,9 @@ export default function GamePlay({ level, winner, setWinner }) {
 				});
 				setTurn(turn => (turn === 'red' ? 'black' : 'red'));
 			});
-			return () => {
-				if (level === 'person') socket.off('active-game');
-			};
+			socket.on('user-left', () => {
+				setConnection(DISCONNECTED);
+			});
 		}
 	}, [level, socket, movePieceMemoized]);
 

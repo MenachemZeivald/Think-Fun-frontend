@@ -18,7 +18,11 @@ export default function Cards({ cards, gameType, socketID, clickHandler, userCan
 							click={userCanClick}
 							isOpen={card.isOpen}
 							isMatch={card.isMatched}
-							imgUrl={`${BASE_URL + '/' + card.img_url}`}
+							imgUrl={
+								BASE_URL +
+								'/' +
+								(gameType === 'VS Person' ? card._doc.img_url : card.img_url)
+							}
 							alt={card.description}
 							index={i}
 							clickHandler={clickHandler}

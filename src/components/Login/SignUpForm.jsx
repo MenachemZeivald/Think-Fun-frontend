@@ -100,6 +100,7 @@ export default function SignUpForm({ toggle }) {
 			const prevWebPage = location.state?.from?.pathname || '/';
 			nav(prevWebPage, { replace: true });
 		} catch (err) {
+			console.log(err.response);
 			serverErrorHandler(err);
 		}
 	};
@@ -158,7 +159,7 @@ export default function SignUpForm({ toggle }) {
 				label={'please enter your name'}
 				name={'name'}
 				err={err.name}
-				onChange={blurHandler}
+				onBlur={blurHandler}
 			/>
 			<InputField
 				label={'please enter your email'}
