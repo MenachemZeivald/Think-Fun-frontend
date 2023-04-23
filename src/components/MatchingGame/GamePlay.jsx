@@ -16,24 +16,23 @@ export default function GamePlay({ level, gameType, category, setWinner }) {
 	const [turn, setTurn] = useState(false);
 	const [gameObj, setGameObj] = useState();
 
-  useEffect(() => {
-    if (gameType === 'VS Person') {
-      socket.on('connect', () => console.log(socket.id));
-      socket.emit('start-matching-game');
-      socket.on('game-started', (room) => {
-        setConnection(CONNECTED);
-        setGameObj(room);
-        setCards(room.cards);
-        socket.id === room.idPlayer1 ? setTurn(true) : setTurn(false);
-        socket.emit('join-room', room.id_room);
-        console.log(room);
-      });
-
-      return () => {
-        socket.emit('disconnected');
-      };
-    }
-  }, []);
+	useEffect(() => {
+		if (gameType === 'VS Person') {
+			socket.on('connect', () => console.log(socket.id));
+			socket.emit('start-matching-game');
+			socket.on('game-started', room => {
+				setConnection(CONNECTED);
+				setGameObj(room);
+				setCards(room.cards);
+				socket.id === room.idPlayer1 ? setTurn(true) : setTurn(false);
+				socket.emit('join-room', room.id_room);
+				console.log(room);
+			});
+			return () => {
+				socket.emit('disconnected');
+			};
+		}
+	}, []);
 
 	useEffect(() => {
 		if (gameType === 'VS Person') {
@@ -49,9 +48,8 @@ export default function GamePlay({ level, gameType, category, setWinner }) {
 				console.log(cards);
 				socket.id === gameObgReceive.whose_turn ? setTurn(true) : setTurn(false);
 			});
-			socket.on('user-left', message => {
+			socket.on('user-left', () => {
 				setConnection(DISCONNECTED);
-				console.log(message);
 			});
 		}
 	}, [socket]);
@@ -63,7 +61,7 @@ export default function GamePlay({ level, gameType, category, setWinner }) {
 	}, []);
 
 	const getmatchingGame = async () => {
-		// TODO: add level
+		// per page is level
 		let url = `/games/matchingGame/?category=${category}&perPage=${9}`;
 		try {
 			const response = await axios.get(url);
