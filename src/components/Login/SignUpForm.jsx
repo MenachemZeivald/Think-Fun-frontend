@@ -146,7 +146,7 @@ export default function SignUpForm({ toggle }) {
       <ProfilePic src={selectedImage ? URL.createObjectURL(selectedImage) : `https://api.dicebear.com/6.x/pixel-art/svg?seed=${formData.name}`} />
       <h1>SIGN UP</h1>
 
-      <InputField label={'please enter your name'} name={'name'} err={err.name} onChange={blurHandler} />
+      <InputField label={'please enter your name'} name={'name'} err={err.name} onBlur={blurHandler} />
       <InputField label={'please enter your email'} name={'email'} err={err.email} onBlur={blurHandler} />
       <InputFile
         onChange={(event) => {

@@ -22,7 +22,7 @@ export default function Cards({ cards, gameType, clickHandler, userCanClick }) {
 								BASE_URL +
 								'/' +
 								// (gameType === 'VS Person' ? card._doc.img_url : card.img_url)
-								(gameType === 'VS Person' ? card.img_url : card.img_url)
+								(gameType === 'VS Person' ? card._doc.img_url : card.img_url)
 							}
 							alt={card.description}
 							index={i}

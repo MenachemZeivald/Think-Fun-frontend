@@ -47,7 +47,7 @@ export default function Result({ res, resetLevel, resetBoard, typeGame, isOnline
 		<ResContainer>
 			<ResTxt>{res === 'tie' ? res : `you ${res}!`}</ResTxt>
 			<ResBtnContainer>
-				{resetLevel && <ResetBtn text={'change level'} resetFunc={resetLevel} />}
+				{resetLevel && !isOnline && <ResetBtn text={'change level'} resetFunc={resetLevel} />}
 				<ResetBtn text={'play again'} resetFunc={resetBoard} />
 			</ResBtnContainer>
 			<ResIcons>

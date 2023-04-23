@@ -28,6 +28,10 @@ export default function GamePlay({ gameType, category, setWinner }) {
         socket.emit('join-room', room.id_room);
         console.log(room);
       });
+
+      return () => {
+        socket.emit('disconnected');
+      };
     }
   }, []);
 
