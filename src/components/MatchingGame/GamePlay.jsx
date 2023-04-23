@@ -16,20 +16,24 @@ export default function GamePlay({ level, gameType, category, setWinner }) {
 	const [turn, setTurn] = useState(false);
 	const [gameObj, setGameObj] = useState();
 
-	useEffect(() => {
-		if (gameType === 'VS Person') {
-			socket.on('connect', () => console.log(socket.id));
-			socket.emit('start-matching-game');
-			socket.on('game-started', room => {
-				setConnection(CONNECTED);
-				setGameObj(room);
-				setCards(room.cards);
-				socket.id === room.idPlayer1 ? setTurn(true) : setTurn(false);
-				socket.emit('join-room', room.id_room);
-				console.log(room);
-			});
-		}
-	}, []);
+  useEffect(() => {
+    if (gameType === 'VS Person') {
+      socket.on('connect', () => console.log(socket.id));
+      socket.emit('start-matching-game');
+      socket.on('game-started', (room) => {
+        setConnection(CONNECTED);
+        setGameObj(room);
+        setCards(room.cards);
+        socket.id === room.idPlayer1 ? setTurn(true) : setTurn(false);
+        socket.emit('join-room', room.id_room);
+        console.log(room);
+      });
+
+      return () => {
+        socket.emit('disconnected');
+      };
+    }
+  }, []);
 
 	useEffect(() => {
 		if (gameType === 'VS Person') {

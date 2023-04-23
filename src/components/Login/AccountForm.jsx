@@ -154,7 +154,7 @@ export default function AccountForm() {
     const formData = new FormData();
     formData.append('image', e.target.files[0]);
     try {
-      const url = info.img_url[0] !== 'h' ? '/users/editImage' : '/users/uploadImage';
+      const url = info.img_url?.[0] !== 'h' ? '/users/editImage' : '/users/uploadImage';
       const headers = { Authorization: `Bearer ${auth.accessToken}` };
       const response = await axios.post(BASE_URL + url, formData, { headers });
       if (response.data.modifiedCount === 1) myInfoInit();

@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { useNavigate } from 'react-router-dom';
 
 import Form from './Form';
 import InputField from './InputField';
@@ -10,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function ForgotPassword() {
   const reRef = useRef();
+  const nav = useNavigate();
 
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -42,6 +44,7 @@ function ForgotPassword() {
       setIsCodeSent(true);
       setTimer(300);
     } catch (err) {
+      setIsSending(false);
       if (!err?.response) {
         notify('error', 'No Server Response');
       } else if (err.response?.status === 400) {
@@ -92,12 +95,19 @@ function ForgotPassword() {
         const headers = { Authorization: `Bearer ${tokenConfirmationCodeVerified}` };
         console.log(headers);
         const response = await axios.put('/users/editPassword/oneTimeCode', { password }, { headers });
-        console.log(response.data);
-        notify('success', 'Your password has been reset');
+        if (response.status === 200) {
+          notify('success', 'Your password has been reset');
+          setTokenConfirmationCodeVerified(null);
+          setTimeout(() => {
+            nav('/');
+          }, 3000);
+        }
       }
     } catch (err) {
       if (!err?.response) {
         notify('error', 'No Server Response');
+      } else if (err.response.status === 403) {
+        setIsVerify(false);
       } else {
         notify('error', 'edit password Failed');
       }
