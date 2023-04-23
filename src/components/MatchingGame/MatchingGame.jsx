@@ -69,8 +69,8 @@ export default function MatchingGame() {
 			res={winner}
 			resetBoard={() => setWinner(false)}
 			typeGame={'matching_game'}
-			level={gameType === 'VS Person' ? 'hard' : level}
-			isOnline={gameType === 'VS person'}
+			level={gameType === 'VS Person' ? '' : level}
+			isOnline={gameType === 'VS Person'}
 		/>
 	);
 }

@@ -30,7 +30,7 @@ export default function GamePlay({ level, gameType, category, setWinner }) {
 			});
 			return () => {
 				socket.emit('disconnected');
-			};
+			  };
 		}
 	}, []);
 
@@ -48,8 +48,9 @@ export default function GamePlay({ level, gameType, category, setWinner }) {
 				console.log(cards);
 				socket.id === gameObgReceive.whose_turn ? setTurn(true) : setTurn(false);
 			});
-			socket.on('user-left', () => {
+			socket.on('user-left', message => {
 				setConnection(DISCONNECTED);
+				console.log(message);
 			});
 		}
 	}, [socket]);
@@ -61,7 +62,7 @@ export default function GamePlay({ level, gameType, category, setWinner }) {
 	}, []);
 
 	const getmatchingGame = async () => {
-		// per page is level
+		// TODO: add level
 		let url = `/games/matchingGame/?category=${category}&perPage=${9}`;
 		try {
 			const response = await axios.get(url);

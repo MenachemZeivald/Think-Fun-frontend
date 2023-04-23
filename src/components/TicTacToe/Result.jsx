@@ -47,9 +47,7 @@ export default function Result({ res, resetLevel, resetBoard, typeGame, isOnline
 		<ResContainer>
 			<ResTxt>{res === 'tie' ? res : `you ${res}!`}</ResTxt>
 			<ResBtnContainer>
-				{resetLevel && !isOnline && (
-					<ResetBtn text={'change level'} resetFunc={resetLevel} />
-				)}
+				{resetLevel && !isOnline &&  <ResetBtn text={'change level'} resetFunc={resetLevel} />}
 				<ResetBtn text={'play again'} resetFunc={resetBoard} />
 			</ResBtnContainer>
 			<ResIcons>
@@ -153,6 +151,7 @@ const ResBtnContainer = styled.div`
 
 	@media (max-device-width: 425px) {
 		margin-top: 2vh;
+		
 	}
 	@media (max-device-width: 768px) {
 		flex-wrap: wrap;
