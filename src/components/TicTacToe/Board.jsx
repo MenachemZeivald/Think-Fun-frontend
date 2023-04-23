@@ -2,84 +2,46 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from '../../api/axios';
 
-import axios from '../../api/axios';
 import Square from './Square';
 import ResetBtn from './ResetBtn';
 import Icon from '../Icon';
 import ChatBox from './ChatBox';
 
-export default function Board({
-	board,
-	setBoard,
-	makeTurn,
-	socketID,
-	myTurn,
-	winArr = [],
-	resetFunc,
-	vsPerson,
-	userSign,
-}) {
-	const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
-	const [isAskedHelp, setIsAskHelp] = useState(false);
-	const helpFromGPT = async () => {
-		try {
-			const response = await axios.post(`games/helpFromGPT/?typeGame=${'tic_tac_toe'}`, {
-				board,
-				sign: userSign,
-			});
-			console.log(response.data);
-			setIsAskHelp(true);
-			setBoard(prevBoard => {
-				let tempBoard = [...prevBoard];
-				tempBoard[response.data] = userSign;
-				return tempBoard;
-			});
-			myTurn = false;
-		} catch (error) {
-			console.log(error.response.data);
-		}
-	};
-	return (
-		<LayoutStyle>
-			<BoardStyle>
-				{board.map((place, i) => {
-					return (
-						<Square
-							key={i}
-							place={place}
-							index={i}
-							clickable={myTurn && !winArr.length}
-							clickHandler={makeTurn}
-							findInWinArr={winArr.includes(i)}
-						></Square>
-					);
-				})}
-			</BoardStyle>
-			{vsPerson && (
-				<ChatBox
-					socketID={socketID}
-					closeChatBoxFunc={() => setIsChatBoxOpen(false)}
-					isOpen={isChatBoxOpen}
-					setIsOpen={setIsChatBoxOpen}
-				/>
-			)}
-			<FooterStyle vsPerson={vsPerson}>
-				{vsPerson ? (
-					<Icon
-						text={'question_mark'}
-						clickHandler={() => !isAskedHelp && myTurn && helpFromGPT()}
-					/>
-				) : null}
-				{vsPerson || <ResetBtn resetFunc={resetFunc} clickable={winArr.length} />}
-				{vsPerson && (
-					<Icon
-						text={'chat'}
-						clickHandler={() => setIsChatBoxOpen(isChatBoxOpen => !isChatBoxOpen)}
-					/>
-				)}
-			</FooterStyle>
-		</LayoutStyle>
-	);
+export default function Board({ board, setBoard, makeTurn, myTurn, winArr = [], resetFunc, vsPerson, userSign }) {
+  const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
+  const [isAskedHelp, setIsAskHelp] = useState(false);
+  console.log(myTurn);
+  const helpFromGPT = async () => {
+    try {
+      const response = await axios.post(`games/helpFromGPT/?typeGame=${'tic_tac_toe'}`, { board, sign: userSign });
+      console.log(response.data);
+      setIsAskHelp(true);
+      setBoard((prevBoard) => {
+        let tempBoard = [...prevBoard];
+        tempBoard[response.data] = userSign;
+        return tempBoard;
+      });
+      myTurn = false;
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+  
+  return (
+    <LayoutStyle>
+      <BoardStyle>
+        {board.map((place, i) => {
+          return <Square key={i} place={place} index={i} clickable={myTurn} clickHandler={makeTurn} findInWinArr={winArr.includes(i)}></Square>;
+        })}
+      </BoardStyle>
+      {vsPerson && <ChatBox socketID={socketID} closeChatBoxFunc={() => setIsChatBoxOpen(false)} isOpen={isChatBoxOpen} setIsOpen={setIsChatBoxOpen} />}
+      <FooterStyle vsPerson={vsPerson}>
+      {vsPerson ? <Icon text={'question_mark'} clickHandler={() => !isAskedHelp && myTurn && helpFromGPT()} /> : null}
+        {vsPerson || <ResetBtn resetFunc={resetFunc} clickable={winArr.length} />}
+        {vsPerson && <Icon text={'chat'} clickHandler={() => setIsChatBoxOpen((isChatBoxOpen) => !isChatBoxOpen)} />}
+      </FooterStyle>
+    </LayoutStyle>
+  );
 }
 
 const LayoutStyle = styled.div`
