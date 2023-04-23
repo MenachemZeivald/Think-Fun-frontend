@@ -10,8 +10,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function ForgotPassword() {
-	const reRef = useRef();
-	const nav = useNavigate();
+  const reRef = useRef();
+  const nav = useNavigate();
 
 	const [email, setEmail] = useState('');
 	const [code, setCode] = useState('');

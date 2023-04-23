@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import axios from '../../api/axios';
 
 import axios from '../../api/axios';
 import Square from './Square';
@@ -82,26 +83,26 @@ export default function Board({
 }
 
 const LayoutStyle = styled.div`
-	display: grid;
-	place-items: center;
-	gap: 0.5em;
+  display: grid;
+  place-items: center;
+  gap: 0.5em;
 `;
 
 const BoardStyle = styled.div`
-	max-width: 75vh;
-	width: 80vmin;
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	grid-template-rows: repeat(3, 1fr);
-	margin: 0 auto;
-	margin-top: 20px;
-	border: 3px solid var(--pink);
-	background-color: var(--yellow);
-	@media (max-device-width: 768px) {
-		width: 97vw;
-		margin-top: 10vh;
-		margin-bottom: 5vh;
-	}
+  max-width: 75vh;
+  width: 80vmin;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  margin: 0 auto;
+  margin-top: 20px;
+  border: 3px solid var(--pink);
+  background-color: var(--yellow);
+  @media (max-device-width: 768px) {
+    width: 97vw;
+    margin-top: 10vh;
+    margin-bottom: 5vh;
+  }
 `;
 
 const FooterStyle = styled.div`
