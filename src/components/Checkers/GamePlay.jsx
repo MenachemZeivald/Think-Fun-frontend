@@ -4,18 +4,16 @@ import { BASE_URL } from '../../api/axios';
 
 import CheckerBoard from './Board';
 
-import { getLegalMoves, movePiece, checkIfWin, AiRandomMove } from './functions';
-
-const socket = io.connect(BASE_URL);
+import { getLegalMoves, movePiece, checkIfWin, AiTurn, countPieces } from './functions';
 
 export default function GamePlay({ level, winner, setWinner }) {
   const CONNECTED = 1;
   const DISCONNECTED = -1;
   const WAITING_FOR_CONNECT = 0;
 
+  const [socket] = useState(io(BASE_URL));
   const [board, setBoard] = useState([]);
   const [legalMoves, setLegalMoves] = useState([]);
-  // const [doubleJumpMoves, setDoubleJumpMoves] = useState([]);
   const [chosenPiece, setChosenPiece] = useState(null);
   const [userColor, setUserColor] = useState(level === 'person' ? null : 'red');
   const [turn, setTurn] = useState('red');
@@ -30,14 +28,13 @@ export default function GamePlay({ level, winner, setWinner }) {
     if (level === 'person') {
       socket.on('connect', () => console.log(socket.id));
       //add name and image
-      socket.emit('start-checkers');
+      socket.emit('start-tic-tac-toe');
       socket.on('game-started', (room) => {
         setConnection(CONNECTED);
         setGameObj(room);
         setUserColor(socket.id === room.idPlayer1 ? 'red' : 'black');
         socket.emit('join-room', room.id_room);
       });
-
       return () => {
         socket.emit('disconnected');
       };
@@ -70,10 +67,15 @@ export default function GamePlay({ level, winner, setWinner }) {
   useEffect(() => {
     if (level !== 'person' && turn === 'black') {
       setTimeout(() => {
-        let [piecePosition, nextPosition] = AiRandomMove(board);
-        console.log(piecePosition, nextPosition);
+        let [piecePosition, nextPosition] = AiTurn(board, level);
+        if (piecePosition === null) {
+          let { redPieces, blackPieces } = countPieces(board);
+          let res = redPieces === blackPieces ? 'tie' : redPieces > blackPieces ? 'win' : 'lose';
+          setWinner(res);
+          return;
+        }
         let [pieceRow, pieceColumn] = piecePosition;
-        let isKing = board[pieceRow][pieceColumn].isKing;
+        let isKing = board[pieceRow][pieceColumn]?.isKing;
         let tempBoard = movePiece(board, pieceRow, pieceColumn, 'black', isKing, nextPosition);
         setBoard(tempBoard);
         setTurn('red');
@@ -104,8 +106,7 @@ export default function GamePlay({ level, winner, setWinner }) {
   function squareClickHandler(rowIndex, columnIndex, piece) {
     if (piece === null) return;
     setChosenPiece([rowIndex, columnIndex]);
-    let [legalMoves, doubleJumpMoves] = getLegalMoves(board, [rowIndex, columnIndex], piece.piece, piece.isKing);
-    // setDoubleJumpMoves(doubleJumpMoves);
+    let legalMoves = getLegalMoves(board, [rowIndex, columnIndex], piece.piece, piece.isKing);
     setLegalMoves(legalMoves);
   }
 
@@ -146,7 +147,7 @@ export default function GamePlay({ level, winner, setWinner }) {
   }
 
   if (level === 'person' && connection === WAITING_FOR_CONNECT) {
-    return <h1>LOADING</h1>;
+    return <img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />;
   }
   if (connection === DISCONNECTED) {
     return <h1>user left</h1>;
@@ -157,6 +158,8 @@ export default function GamePlay({ level, winner, setWinner }) {
       board={board}
       squareClickHandler={squareClickHandler}
       makeMove={moveClickHandler}
+      socketID={gameObj && [socket, gameObj.id_room]}
+      vsPerson={level === 'person'}
       myTurn={userColor === turn}
       userColor={userColor}
       legalMoves={legalMoves}

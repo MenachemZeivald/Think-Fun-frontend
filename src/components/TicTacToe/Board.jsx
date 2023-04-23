@@ -34,11 +34,11 @@ export default function Board({ board, setBoard, makeTurn, myTurn, winArr = [], 
           return <Square key={i} place={place} index={i} clickable={myTurn} clickHandler={makeTurn} findInWinArr={winArr.includes(i)}></Square>;
         })}
       </BoardStyle>
-      <ChatBox blurHandler={() => setIsChatBoxOpen(false)} isOpen={isChatBoxOpen} />
-      <FooterStyle justify={vsPerson}>
-        {vsPerson ? <Icon text={'question_mark'} clickHandler={() => !isAskedHelp && myTurn && helpFromGPT()} /> : null}
-        <ResetBtn resetFunc={resetFunc} clickable={winArr.length} />
-        {vsPerson ? <Icon text={'chat'} clickHandler={() => setIsChatBoxOpen(true)} /> : null}
+      {vsPerson && <ChatBox socketID={socketID} closeChatBoxFunc={() => setIsChatBoxOpen(false)} isOpen={isChatBoxOpen} setIsOpen={setIsChatBoxOpen} />}
+      <FooterStyle vsPerson={vsPerson}>
+      {vsPerson ? <Icon text={'question_mark'} clickHandler={() => !isAskedHelp && myTurn && helpFromGPT()} /> : null}
+        {vsPerson || <ResetBtn resetFunc={resetFunc} clickable={winArr.length} />}
+        {vsPerson && <Icon text={'chat'} clickHandler={() => setIsChatBoxOpen((isChatBoxOpen) => !isChatBoxOpen)} />}
       </FooterStyle>
     </LayoutStyle>
   );
