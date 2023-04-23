@@ -10,8 +10,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function ForgotPassword() {
-  const reRef = useRef();
-  const nav = useNavigate();
+	const reRef = useRef();
+	const nav = useNavigate();
 
 	const [email, setEmail] = useState('');
 	const [code, setCode] = useState('');
@@ -44,7 +44,6 @@ function ForgotPassword() {
 			setIsCodeSent(true);
 			setTimer(300);
 		} catch (err) {
-			setIsSending(false);
 			if (!err?.response) {
 				notify('error', 'No Server Response');
 			} else if (err.response?.status === 400) {
@@ -99,19 +98,12 @@ function ForgotPassword() {
 					{ password },
 					{ headers }
 				);
-				if (response.status === 200) {
-					notify('success', 'Your password has been reset');
-					setTokenConfirmationCodeVerified(null);
-					setTimeout(() => {
-						nav('/');
-					}, 3000);
-				}
+				console.log(response.data);
+				notify('success', 'Your password has been reset');
 			}
 		} catch (err) {
 			if (!err?.response) {
 				notify('error', 'No Server Response');
-			} else if (err.response.status === 403) {
-				setIsVerify(false);
 			} else {
 				notify('error', 'edit password Failed');
 			}

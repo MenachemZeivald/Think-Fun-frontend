@@ -46,7 +46,6 @@ export default function SignUpForm({ toggle }) {
 		if (errorMessage) {
 			setErr({ ...err, [name]: errorMessage });
 		} else {
-			setErr({ ...err, [name]: '' });
 			setFormData({ ...formData, [name]: value.trim() });
 		}
 	};

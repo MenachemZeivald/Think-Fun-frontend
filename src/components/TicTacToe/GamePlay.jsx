@@ -11,7 +11,6 @@ export default function GamePlay({ level, winner, setWinner }) {
 	const DISCONNECTED = -1;
 	const WAITING_FOR_CONNECT = 0;
 
-	const [socket] = useState(io(BASE_URL));
 	const [board, setBoard] = useState([' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']);
 	const [userSign, setUserSign] = useState(level === 'person' ? null : 'X');
 	const [connection, setConnection] = useState(WAITING_FOR_CONNECT);
@@ -72,6 +71,7 @@ export default function GamePlay({ level, winner, setWinner }) {
 		});
 		if (level === 'person') {
 			socket.emit('active-game', { ...gameObj, index });
+			console.log(gameObj);
 		}
 	}
 
@@ -90,9 +90,7 @@ export default function GamePlay({ level, winner, setWinner }) {
 	}
 
 	if (level === 'person' && connection === WAITING_FOR_CONNECT) {
-		return (
-			<img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />
-		);
+		return <h1>LOADING</h1>;
 	}
 	if (connection === DISCONNECTED) {
 		return <h1>user left</h1>;
