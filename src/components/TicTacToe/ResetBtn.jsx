@@ -3,16 +3,16 @@ import styled from 'styled-components';
 import DefaultStyle from '../../DefaultStyle';
 
 export default function ResetBtn({ resetFunc, clickable, text = 'reset' }) {
-	return <ResetBtnStyle onClick={() => clickable || resetFunc()}>{text}</ResetBtnStyle>;
+    return <ResetBtnStyle onClick={() => clickable || resetFunc()}>{text}</ResetBtnStyle>;
 }
 
 const ResetBtnStyle = styled(DefaultStyle)`
-	flex-wrap: wrap;
-	width: fit-content;
-	height: 100%;
-	padding: 0.3em;
-	border-width: 4px;
-	/* font-size: large;
+    flex-wrap: wrap;
+    width: fit-content;
+    height: 100%;
+    padding: 0.3em;
+    border-width: 4px;
+    /* font-size: large;
 	width: fit-content;
 	padding: 0.2em 0.4em;
 	position: absolute;
