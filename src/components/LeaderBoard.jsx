@@ -82,9 +82,13 @@ export default function LeaderBoard() {
 		}
 	};
 
-	return isLoading ? (
-		<img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />
-	) : (
+	if (isLoading) {
+		let imgSrc =
+			'https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700';
+		return <img src={imgSrc} alt={'Loading gif'} />;
+	}
+
+	return (
 		<>
 			<div style={{ width: '100%', textAlign: 'center', color: '#ffe45e' }}>
 				<h1>LeaderBoard </h1>

@@ -3,143 +3,134 @@ import axios, { BASE_URL } from '../../api/axios';
 import io from 'socket.io-client';
 import Cards from './Cards';
 
-export default function GamePlay({ level, gameType, category, setWinner }) {
-    const CONNECTED = 1;
-    const DISCONNECTED = -1;
-    const WAITING_FOR_CONNECT = 0;
+export default function GamePlay({ level, gameType, category, winner, setWinner }) {
+	const CONNECTED = 1;
+	const DISCONNECTED = -1;
+	const WAITING_FOR_CONNECT = 0;
 
-    const [socket] = useState(io(BASE_URL));
-    const [counter, setCounter] = useState(0);
-    const [cards, setCards] = useState([]);
-    const [numOfCardsIFliped, setnumOfCardsIFliped] = useState(0);
-    const [connection, setConnection] = useState(WAITING_FOR_CONNECT);
-    const [turn, setTurn] = useState(false);
-    const [gameObj, setGameObj] = useState();
+	const [socket] = useState(io(BASE_URL));
+	const [cards, setCards] = useState([]);
+	const [numCardsFliped, setNumCardsFliped] = useState(0);
+	const [connectionStatus, setConnectionStatus] = useState(WAITING_FOR_CONNECT);
+	const [turn, setTurn] = useState(gameType === 'VS AI' ? true : false);
+	const [gameObj, setGameObj] = useState();
 
-    useEffect(() => {
-        if (gameType === 'VS Person') {
-            socket.on('connect', () => console.log(socket.id));
-            socket.emit('start-matching-game');
-            socket.on('game-started', (room) => {
-                setConnection(CONNECTED);
-                setGameObj(room);
-                setCards(room.cards);
-                socket.id === room.idPlayer1 ? setTurn(true) : setTurn(false);
-                socket.emit('join-room', room.id_room);
-                console.log(room);
-            });
-            return () => {
-                socket.emit('disconnected');
-            };
-        }
-    }, []);
+	const openCards = cards.filter(card => card.isOpen);
+	const numOfMatchedCards = cards.filter(card => card.isMatched).length;
 
-    useEffect(() => {
-        if (gameType === 'VS Person') {
-            socket.on('active-matching-game', (gameObgReceive) => {
-                console.log('receive ', gameObgReceive);
-                let index = gameObgReceive.index;
-                console.log('index: ', index);
-                setCards((cards) => {
-                    const tempCards = [...cards];
-                    tempCards[index].isOpen = true;
-                    return [...tempCards];
-                });
-                console.log(cards);
-                socket.id === gameObgReceive.whose_turn ? setTurn(true) : setTurn(false);
-            });
-            socket.on('user-left', (message) => {
-                setConnection(DISCONNECTED);
-                console.log(message);
-            });
-        }
-    }, [socket]);
+	useEffect(() => {
+		if (gameType === 'VS Person') {
+			socket.on('connect', () => console.log(socket.id));
+			socket.emit('start-matching-game');
+			socket.on('game-started', room => {
+				setConnectionStatus(CONNECTED);
+				setGameObj(room);
+				setCards(room.cards);
+				setTurn(socket.id === room.idPlayer1 ? true : false);
+				socket.emit('join-room', room.id_room);
+			});
+			return () => {
+				socket.emit('disconnected');
+			};
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-    useEffect(() => {
-        if (gameType !== 'VS Person') {
-            getmatchingGame();
-        }
-    }, []);
+	useEffect(() => {
+		if (gameType === 'VS Person') {
+			socket.on('active-matching-game', gameObgReceive => {
+				let index = gameObgReceive.index;
+				setCards(cards => {
+					const tempCards = [...cards];
+					tempCards[index].isOpen = true;
+					return [...tempCards];
+				});
+			});
+			socket.on('user-left', () => {
+				setConnectionStatus(DISCONNECTED);
+			});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [socket]);
 
-    const getmatchingGame = async () => {
-        // TODO: add level
-        let url = `/games/matchingGame/?category=${category}&perPage=${9}`;
-        try {
-            const response = await axios.get(url);
-            let cardsArr = response.data;
-            let cardsArrLen = cardsArr.length;
-            for (let i = 0; i < cardsArrLen; i++) {
-                cardsArr[i].isOpen = false;
-                cardsArr[i].isMatched = false;
-                cardsArr.push({ ...cardsArr[i] });
-            }
-            cardsArr = cardsArr.sort(() => Math.random() - 0.5);
-            setCards(cardsArr);
-        } catch (err) {
-            console.log(err);
-        }
-    };
+	useEffect(() => {
+		if (cards.length && numOfMatchedCards === cards.length)
+			setWinner(numCardsFliped >= cards.length / 2 ? 'win' : 'lose');
+	}, [cards, numOfMatchedCards, numCardsFliped, setWinner]);
 
-    const cardClickHandler = (index) => {
-        if ((gameType === 'VS Person' && turn) || gameType !== 'VS Person') {
-            setCards((cards) => {
-                const tempCards = [...cards];
-                tempCards[index].isOpen = true;
-                return [...tempCards];
-            });
-            if (gameType === 'VS Person') {
-                socket.emit('active-matching-game', { ...gameObj, index });
-                setCounter((prev) => prev + 1);
-                if (counter === 1) {
-                    setTurn(false);
-                    setCounter(0);
-                }
-                console.log(cards);
-            }
-        }
-    };
+	function checkIfMatched() {
+		const vsPerson = gameType === 'VS Person';
+		const firstCardId = vsPerson ? openCards[0]._doc._id : openCards[0]._id;
+		const secondCardId = vsPerson ? openCards[1]._doc._id : openCards[1]._id;
+		const cardsToFlip = turn ? 2 : 0;
 
-    const countUnmatchedCards = (cards) => {
-        return cards.filter((card) => !card.isMatched).length;
-    };
+		setTimeout(() => {
+			if (vsPerson) setTurn(!turn);
 
-    const openCards = cards.filter((card) => card.isOpen);
-    if (gameType === 'VS Person') {
-        if (openCards.length === 2 && openCards[0]._doc._id === openCards[1]._doc._id) {
-            setTimeout(() => {
-                setnumOfCardsIFliped(numOfCardsIFliped + 2);
-                setCards((cards) =>
-                    cards.map((card) => (card._doc._id === openCards[0]._doc._id || card._doc._id === openCards[1]._doc._id ? { ...card, isOpen: false, isMatched: true } : card))
-                );
-            }, 1000);
-        } else if (openCards.length === 2) {
-            setTimeout(() => {
-                setCards((cards) => cards.map((card) => ({ ...card, isOpen: false })));
-            }, 700);
-        }
-    } else {
-        if (openCards.length === 2 && openCards[0]._id === openCards[1]._id) {
-            setTimeout(() => {
-                setnumOfCardsIFliped(numOfCardsIFliped + 2);
-                setCards((cards) => cards.map((card) => (card._id === openCards[0]._id || card._id === openCards[1]._id ? { ...card, isOpen: false, isMatched: true } : card)));
-            }, 1000);
-        } else if (openCards.length === 2) {
-            setTimeout(() => {
-                setCards((cards) => cards.map((card) => ({ ...card, isOpen: false })));
-            }, 700);
-        }
-    }
+			if (firstCardId !== secondCardId) {
+				setCards(cards => cards.map(card => ({ ...card, isOpen: false })));
+			} else {
+				setNumCardsFliped(numCardsFliped + cardsToFlip);
+				setCards(cards => {
+					return cards.map(card => {
+						const cardID = vsPerson ? card._doc._id : card._id;
+						return cardID === firstCardId || cardID === secondCardId
+							? { ...card, isOpen: false, isMatched: true }
+							: card;
+					});
+				});
+			}
+		}, 1000);
+	}
 
-    if (cards.length && !countUnmatchedCards(cards)) {
-        console.log(countUnmatchedCards(cards));
-        setWinner(numOfCardsIFliped > 9 ? 'win' : 'lose');
-    }
-    if (gameType === 'VS Person' && connection === WAITING_FOR_CONNECT) {
-        return <img src='https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700' />;
-    }
-    if (connection === DISCONNECTED) {
-        return <h1>user left</h1>;
-    }
+	const getCards = async () => {
+		// not working
+		let numOfCards = level === 'Easy' ? 6 : level === 'Medium' ? 12 : 18;
+		let url = `/games/matchingGame/?category=${category}&perPage=${numOfCards}`;
+		try {
+			const response = await axios.get(url);
+			let cardsArr = response.data;
+			cardsArr = [...cardsArr, ...cardsArr];
+			cardsArr = cardsArr.map(card => ({ ...card, isOpen: false, isMatched: false }));
+			cardsArr.sort(() => Math.random() - 0.5);
+			setCards(cardsArr);
+		} catch (err) {
+			console.log(err);
+		}
+	};
 
-    return <Cards cards={cards} gameType={gameType} socketID={gameObj && [socket, gameObj.id_room]} clickHandler={cardClickHandler} userCanClick={openCards.length < 2} />;
+	const cardClickHandler = index => {
+		setCards(cards => {
+			const tempCards = [...cards];
+			tempCards[index].isOpen = true;
+			return [...tempCards];
+		});
+		if (gameType === 'VS Person') {
+			socket.emit('active-matching-game', { ...gameObj, index });
+		}
+	};
+
+	if (!cards.length && gameType !== 'VS Person') getCards();
+
+	if (openCards.length === 2) checkIfMatched();
+
+	if (!cards.length) {
+		let loadingGif =
+			'https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700';
+		return <img src={loadingGif} alt={'Loading gif'} />;
+	}
+
+	if (connectionStatus === DISCONNECTED) {
+		return <h1>user left</h1>;
+	}
+
+	return (
+		<Cards
+			cards={cards}
+			gameType={gameType}
+			socketID={gameObj && [socket, gameObj.id_room]}
+			clickHandler={cardClickHandler}
+			userCanClick={turn && openCards.length < 2}
+		/>
+	);
 }
