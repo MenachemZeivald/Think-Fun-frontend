@@ -7,12 +7,15 @@ import Result from './Result';
 
 import img1vs1 from '../../assets/personPlay.png';
 import imgvsai from '../../assets/robot_play.png';
+import InviteFriend from './inviteFriend';
 
 export default function TicTacToe() {
     const [gameType, setGameType] = useState();
     const [level, setLevel] = useState();
     const [winner, setWinner] = useState();
-    const [isRandomPlayer, setIsRandomPlayer] = useState();
+    const [isRandomPlayer, setIsRandomPlayer] = useState(null);
+    const [gameObj, setGameObj] = useState();
+    const [socket, setSocket] = useState();
 
     function resetLevel() {
         setWinner();
@@ -26,13 +29,15 @@ export default function TicTacToe() {
         </>
     ) : gameType === 'VS AI' && !level ? (
         <Level setLevel={setLevel} />
-    ) : gameType === 'VS Person' && !isRandomPlayer ? (
+    ) : gameType === 'VS Person' && isRandomPlayer === null ? (
         <>
-            <GameCard bgImg={img1vs1} setter={setIsRandomPlayer} name='random player' />
-            <GameCard bgImg={imgvsai} setter={setIsRandomPlayer} name='invite friend' link={'/inviteFriend'} />
+            <GameCard bgImg={img1vs1} setter={() => setIsRandomPlayer(true)} name='random player' />
+            <GameCard bgImg={imgvsai} setter={() => setIsRandomPlayer(false)} name='invite friend' />
         </>
+    ) : !isRandomPlayer ? (
+        <InviteFriend setGameObj={setGameObj} setIsRandomPlayer={setIsRandomPlayer} setSocket={setSocket} socket={socket} />
     ) : !winner ? (
-        <GamePlay level={level || 'person'} resetLevel={resetLevel} winner={winner} setWinner={setWinner} />
+        <GamePlay level={level || 'person'} socketP={socket}  resetLevel={resetLevel} setGameObj={setGameObj} gameObj={gameObj} winner={winner} setWinner={setWinner} />
     ) : (
         <Result
             res={winner}

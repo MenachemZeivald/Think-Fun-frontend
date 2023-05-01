@@ -6,38 +6,49 @@ import Board from './Board';
 
 import { AIturn, checkIfWin, findWinArr, isMyTurn } from './functions';
 
-export default function GamePlay({ level, winner, setWinner }) {
+export default function GamePlay({ socketP, level, winner, setWinner, setGameObj, gameObj }) {
 	const CONNECTED = 1;
 	const DISCONNECTED = -1;
 	const WAITING_FOR_CONNECT = 0;
 
-	const [socket] = useState(io(BASE_URL));
+	const [socket] = useState(socketP || io.connect(BASE_URL));
 	const [board, setBoard] = useState([' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']);
 	const [userSign, setUserSign] = useState(level === 'person' ? null : 'X');
 	const [connection, setConnection] = useState(WAITING_FOR_CONNECT);
-	const [gameObj, setGameObj] = useState();
 
 	let myTurn = isMyTurn(board, userSign);
 
+	console.log('gameObj: ', gameObj);
+
 	useEffect(() => {
-		if (level === 'person') {
+		if (level === 'person' && !gameObj) {
 			socket.on('connect', () => console.log(socket.id));
 			socket.emit('start-tic-tac-toe');
 			socket.on('game-started', room => {
 				setConnection(CONNECTED);
 				setGameObj(room);
+				console.log(room);
 				setUserSign(socket.id === room.idPlayer1 ? 'X' : 'O');
 				socket.emit('join-room', room.id_room);
 			});
-			return () => {
-				socket.emit('disconnected');
-			};
 		}
+		if (level === 'person' && gameObj) {
+			setConnection(CONNECTED);
+			setUserSign(socket.id === gameObj.idPlayer1 ? 'X' : 'O');
+		}
+		return () => {
+			if (level == 'person') {
+				socket.emit('disconnected');
+				setGameObj();
+				console.log('disconnected', gameObj);
+			}
+		};
 	}, []);
 
 	useEffect(() => {
 		if (level === 'person') {
 			socket.on('active-game', gameObgReceive => {
+				console.log(gameObgReceive);
 				let index = gameObgReceive.index;
 				let sign = socket.id === gameObgReceive.idPlayer1 ? 'O' : 'X';
 				setBoard(prevBoard => {

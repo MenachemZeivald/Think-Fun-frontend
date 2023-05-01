@@ -28,6 +28,7 @@ export default function Result({ res, resetLevel, resetBoard, typeGame, isOnline
 		const refreshToken = async () => {
 			await refresh();
 		};
+		console.log(auth);
 		!auth?.name ? refreshToken() : matchingGameInit();
 	}, [auth]);
 
