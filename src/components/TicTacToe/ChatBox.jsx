@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import useAuth from '../../hooks/useAuth';
+import { BASE_URL } from '../../api/axios';
 
 export default function ChatBox({ socketID, closeChatBoxFunc, isOpen, setIsOpen }) {
 	const [messages, setMessages] = useState([]);
@@ -11,7 +12,6 @@ export default function ChatBox({ socketID, closeChatBoxFunc, isOpen, setIsOpen 
 	const divRef = useRef(null);
 
 	const { auth } = useAuth();
-	// console.log('Auth', auth);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -33,7 +33,9 @@ export default function ChatBox({ socketID, closeChatBoxFunc, isOpen, setIsOpen 
 		if (socket) {
 			socket.on('receiver-message', message => {
 				setMessages(messages => {
-					return [...messages, { text: message.text, isSender: false }];
+					let tempMessages = [{ text: message.text, isSender: false }, ...messages];
+					console.log(tempMessages);
+					return tempMessages;
 				});
 				if (!isOpen) {
 					setIsOpen(true);
@@ -46,7 +48,9 @@ export default function ChatBox({ socketID, closeChatBoxFunc, isOpen, setIsOpen 
 		if (e.type === 'click' || e.key === 'Enter') {
 			e.preventDefault();
 			if (input !== '') {
-				setMessages([...messages, { text: input, isSender: true }]);
+				setMessages(messages => {
+					return [{ text: input, isSender: true }, ...messages];
+				});
 				setInput('');
 				socket.emit('send-message', { text: input, id_room });
 			}
@@ -58,8 +62,21 @@ export default function ChatBox({ socketID, closeChatBoxFunc, isOpen, setIsOpen 
 			{isDetailsOpen && (
 				<>
 					<ChatHeaderStyle>
-						{auth ? <span>{auth.name}</span> : <span>Chat Box</span>}
-						{/*auth?.profilePic?.[0] !== 'h' ? BASE_URL + '/' + auth?.profilePic : auth?.profilePic*/}
+						{Object.keys(auth).length !== 0 ? (
+							<UserProfileStyle>
+								<img
+									src={
+										auth?.profilePic?.[0] !== 'h'
+											? BASE_URL + '/' + auth?.profilePic
+											: auth?.profilePic
+									}
+									alt='profile'
+								/>
+								<span>{auth.name}</span>
+							</UserProfileStyle>
+						) : (
+							<span>Chat Box</span>
+						)}
 						<span onClick={closeChatBoxFunc}>X</span>
 					</ChatHeaderStyle>
 					<ChatBodyStyle>
@@ -70,6 +87,7 @@ export default function ChatBox({ socketID, closeChatBoxFunc, isOpen, setIsOpen 
 								</ChatBubbleStyle>
 							);
 						})}
+						<div></div>
 					</ChatBodyStyle>
 					<InputFieldStyle
 						value={input}
@@ -114,16 +132,32 @@ const ChatHeaderStyle = styled.div`
 	border-top-right-radius: 10px;
 	background-color: #e6e6e6;
 	cursor: default;
-	span:nth-child(2) {
+	span {
 		font-size: 1.5rem;
+	}
+	& > span:last-child {
 		font-weight: 600;
 		cursor: pointer;
 	}
 `;
 
+const UserProfileStyle = styled.div`
+	display: flex;
+	align-items: center;
+	img {
+		height: 40px;
+		width: 40px;
+		border-radius: 50%;
+		/* border: 2px solid var(--pink); */
+	}
+	span {
+		margin-left: 10px;
+	}
+`;
+
 const ChatBodyStyle = styled.div`
 	display: flex;
-	flex-direction: column;
+	flex-direction: column-reverse;
 	padding: 20px;
 	height: calc(100% - 100px);
 	overflow-y: auto;

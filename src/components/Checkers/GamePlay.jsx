@@ -68,8 +68,6 @@ export default function GamePlay({ level, winner, setWinner }) {
 			setTimeout(() => {
 				let [piecePosition, nextPosition] = AiTurn(board, level);
 				if (piecePosition === null) {
-					// TODO: remove alert
-					alert('Game Over');
 					let { redPieces, blackPieces } = countPieces(board);
 					let res =
 						redPieces === blackPieces

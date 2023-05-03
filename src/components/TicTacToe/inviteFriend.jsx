@@ -11,35 +11,32 @@ export default function InviteFriend({ setGameObj, setIsRandomPlayer, setSocket 
 		socket.on('connect', () => console.log(socket.id));
 		socket.emit('invite-friend-to-game');
 		socket.on('invite-friend-to-game', id_room => {
-			//setUrl(`https://think-fun.online/room/${id_room}`);
-			setUrl(`http://localhost:3000/room/${id_room}`);
+			//setUrl(`https://think-fun.online/TicTacToe/${id_room}`);
+			setUrl(`http://localhost:3000/TicTacToe/${id_room}`);
 		});
 		socket.on('game-started', room => {
 			setGameObj(room);
-			console.log(room);
-			setIsRandomPlayer(true);
+			setIsRandomPlayer();
 			socket.emit('join-room', room.id_room);
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const message = `Looking for a fun way to challenge your mind?\nCheck out Think-Fun - it's a website full of entertaining thinking games that will put your brain to the test.\nI've been hooked lately and would love to challenge you to a game.\nJust click on the link below to sign up and start playing. Let me know when you've joined so we can start a game together.\n\n\n`;
-	const shareOnWhatsApp = () => {
-		const link = `whatsapp://send?text=${encodeURIComponent(message)} ${encodeURIComponent(
-			url
-		)}`;
-		window.open(link);
-	};
-
-	const shareOnTelegram = () => {
-		const link = `https://telegram.me/share/url?url=${encodeURIComponent(
-			message
-		)}&text=${encodeURIComponent(url)}`;
-		window.open(link);
-	};
-
-	const shareOnMessages = () => {
-		const link = `sms:&body=${encodeURIComponent(message)} ${encodeURIComponent(url)}`;
-		window.open(link);
+	const shareLink = app => {
+		const message = `Looking for a fun way to challenge your mind?\nCheck out Think-Fun - it's a website full of entertaining thinking games that will put your brain to the test.\nI've been hooked lately and would love to challenge you to a game.\nJust click on the link below to sign up and start playing. Let me know when you've joined so we can start a game together.\n\n\n`;
+		if (app === 'whatsapp')
+			window.open(
+				`whatsapp://send?text=${encodeURIComponent(message)}${encodeURIComponent(url)}`
+			);
+		else if (app === 'telegram')
+			window.open(
+				`https://telegram.me/share/url?url=${encodeURIComponent(
+					message
+				)}&text=${encodeURIComponent(url)}`
+			);
+		else if (app === 'messages')
+			window.open(`sms:&body=${encodeURIComponent(message)}${encodeURIComponent(url)}`);
+		else if (app === 'copy') navigator.clipboard.writeText(url);
 	};
 
 	return (
@@ -49,21 +46,16 @@ export default function InviteFriend({ setGameObj, setIsRandomPlayer, setSocket 
 					<h1>Share invite link:</h1>
 				</div>
 				<div>
-					<button className='whatsapp' onClick={shareOnWhatsApp}>
-						<a className='fa-brands fa-whatsapp'></a>
+					<button className='whatsapp' onClick={() => shareLink('whatsapp')}>
+						<i className='fa-brands fa-whatsapp'></i>
 					</button>
-					<button className='telegram' onClick={shareOnTelegram}>
+					<button className='telegram' onClick={() => shareLink('telegram')}>
 						<i className='fa-brands fa-telegram'></i>
 					</button>
-					<button className='messages' onClick={shareOnMessages}>
+					<button className='messages' onClick={() => shareLink('messages')}>
 						<i className='fa-solid fa-comment'></i>
 					</button>
-
-					<button
-						title='copy link'
-						className='copy'
-						onClick={() => navigator.clipboard.writeText(url)}
-					>
+					<button title='copy link' className='copy' onClick={() => shareLink('copy')}>
 						<i className='fa-solid fa-copy'></i>
 					</button>
 				</div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import DefaultStyle from '../DefaultStyle';
 
@@ -7,9 +7,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 // import useAuth from '../hooks/useAuth';
 
 export default function Stat() {
-	// leaderBoard on the home page
-	const [stat, setStat] = useState({});
-	// const { auth } = useAuth();
+	const [stat, setStat] = useState();
+
 	const axiosPrivate = useAxiosPrivate();
 	const controller = new AbortController();
 	const nav = useNavigate();
@@ -21,7 +20,6 @@ export default function Stat() {
 			const response = await axiosPrivate.get(url, {
 				signal: controller.signal,
 			});
-			console.log(response.data);
 			setStat(response.data);
 		} catch (error) {
 			console.log(error);
@@ -29,9 +27,7 @@ export default function Stat() {
 		}
 	};
 
-	useEffect(() => {
-		statisticsInit();
-	}, []);
+	if (!stat) statisticsInit();
 
 	if (!stat?._id) {
 		let imgSrc =
@@ -47,9 +43,9 @@ export default function Stat() {
 						return level !== 'winOnline' ? (
 							<ul key={level}>
 								{level}
-								{Object.keys(stat?.tic_tac_toe[level]).map(res => {
+								{Object.keys(stat?.tic_tac_toe[level]).map((res, i) => {
 									return (
-										<li key={res}>
+										<li key={i}>
 											{res}: {stat?.tic_tac_toe[level][res]}
 										</li>
 									);
@@ -69,9 +65,9 @@ export default function Stat() {
 						return level !== 'winOnline' ? (
 							<ul key={level}>
 								{level}
-								{Object.keys(stat?.matching_game[level]).map(res => {
+								{Object.keys(stat?.matching_game[level]).map((res, i) => {
 									return (
-										<li key={res}>
+										<li key={i}>
 											{res}: {stat?.matching_game[level][res]}
 										</li>
 									);
@@ -91,9 +87,9 @@ export default function Stat() {
 						return level !== 'winOnline' ? (
 							<ul key={level}>
 								{level}
-								{Object.keys(stat?.checkers[level]).map(res => {
+								{Object.keys(stat?.checkers[level]).map((res, i) => {
 									return (
-										<li key={res}>
+										<li key={i}>
 											{res}: {stat?.checkers[level][res]}
 										</li>
 									);

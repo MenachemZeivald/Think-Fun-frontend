@@ -6,12 +6,12 @@ import Board from './Board';
 
 import { AIturn, checkIfWin, findWinArr, isMyTurn } from './functions';
 
-export default function GamePlay({ socketP, level, winner, setWinner, setGameObj, gameObj }) {
+export default function GamePlay({ socketDetails, level, winner, setWinner, setGameObj, gameObj }) {
 	const CONNECTED = 1;
 	const DISCONNECTED = -1;
 	const WAITING_FOR_CONNECT = 0;
 
-	const [socket] = useState(socketP || io.connect(BASE_URL));
+	const [socket] = useState(socketDetails || io.connect(BASE_URL));
 	const [board, setBoard] = useState([' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']);
 	const [userSign, setUserSign] = useState(level === 'person' ? null : 'X');
 	const [connection, setConnection] = useState(WAITING_FOR_CONNECT);
@@ -37,7 +37,7 @@ export default function GamePlay({ socketP, level, winner, setWinner, setGameObj
 			setUserSign(socket.id === gameObj.idPlayer1 ? 'X' : 'O');
 		}
 		return () => {
-			if (level == 'person') {
+			if (level === 'person') {
 				socket.emit('disconnected');
 				setGameObj();
 				console.log('disconnected', gameObj);
@@ -48,7 +48,6 @@ export default function GamePlay({ socketP, level, winner, setWinner, setGameObj
 	useEffect(() => {
 		if (level === 'person') {
 			socket.on('active-game', gameObgReceive => {
-				console.log(gameObgReceive);
 				let index = gameObgReceive.index;
 				let sign = socket.id === gameObgReceive.idPlayer1 ? 'O' : 'X';
 				setBoard(prevBoard => {
@@ -64,7 +63,7 @@ export default function GamePlay({ socketP, level, winner, setWinner, setGameObj
 	}, [socket]);
 
 	useEffect(() => {
-		if (!res && !myTurn) {
+		if (!res && !myTurn && level !== 'person') {
 			setTimeout(() => {
 				makeTurn(AIturn(board, level), 'O');
 			}, 150);
