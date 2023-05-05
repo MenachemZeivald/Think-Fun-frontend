@@ -120,6 +120,12 @@ const ChatBoxStyle = styled.div`
 	&:focus {
 		outline: none;
 	}
+	@media (max-width: 768px) {
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: ${p => (p.isOpen ? '80vh' : '0')};
+	}
 `;
 
 const ChatHeaderStyle = styled.div`
@@ -186,6 +192,9 @@ const ChatBubbleStyle = styled.div`
 	background-color: ${p => (p.isSender ? '#dcf8c6' : '#fff')};
 	color: ${p => (p.isSender ? '#000' : '#1b1b1b')};
 	margin-left: ${p => (p.isSender ? '0' : 'auto')};
+	@media (max-width: 768px) {
+		max-width: 80%;
+	}
 `;
 
 const InputFieldStyle = styled.input`

@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { BASE_URL } from '../../api/axios';
 
 import GameCard from '../GameCard';
-import Level from './Level';
 import GamePlay from './GamePlay';
 import Result from './Result';
 import InviteFriend from './inviteFriend';
@@ -16,7 +15,7 @@ export default function TicTacToe() {
 	const { idRoom } = useParams();
 
 	const [gameStatus, setGameStatus] = useState({
-		name: null,
+		gameType: null,
 		level: null,
 		needToInviteFriend: null,
 		winner: null,
@@ -24,7 +23,7 @@ export default function TicTacToe() {
 	const [gameObj, setGameObj] = useState();
 	const [socket, setSocket] = useState();
 
-	const { name, level, needToInviteFriend, winner } = gameStatus;
+	const { gameType, level, needToInviteFriend, winner } = gameStatus;
 
 	if (idRoom && !socket) setSocket(io.connect(BASE_URL));
 
@@ -39,24 +38,39 @@ export default function TicTacToe() {
 		});
 	}
 
-	if (!name) {
+	if (!gameType) {
 		return (
 			<>
 				<GameCard
 					bgImg={img1vs1}
-					setter={name => setGameStatus({ ...gameStatus, name })}
+					setter={gameType => setGameStatus({ ...gameStatus, gameType })}
 					name='VS Person'
 				/>
 				<GameCard
 					bgImg={imgvsai}
-					setter={name => setGameStatus({ ...gameStatus, name })}
+					setter={gameType => setGameStatus({ ...gameStatus, gameType })}
 					name='VS AI'
 				/>
 			</>
 		);
-	} else if (name === 'VS AI' && !level) {
-		return <Level setLevel={level => setGameStatus({ ...gameStatus, level })} />;
-	} else if (name === 'VS Person' && needToInviteFriend === null) {
+	} else if (gameType === 'VS AI' && !level) {
+		return (
+			<>
+				<GameCard
+					setter={() => setGameStatus({ ...gameStatus, level: 'Easy' })}
+					name='Easy'
+				/>
+				<GameCard
+					setter={() => setGameStatus({ ...gameStatus, level: 'Medium' })}
+					name='Medium'
+				/>
+				<GameCard
+					setter={() => setGameStatus({ ...gameStatus, level: 'Hard' })}
+					name='Hard'
+				/>
+			</>
+		);
+	} else if (gameType === 'VS Person' && needToInviteFriend === null) {
 		return (
 			<>
 				<GameCard
@@ -72,6 +86,7 @@ export default function TicTacToe() {
 	} else if (needToInviteFriend) {
 		return (
 			<InviteFriend
+				game={'TicTacToe'}
 				setGameObj={setGameObj}
 				setIsRandomPlayer={() =>
 					setGameStatus({ ...gameStatus, needToInviteFriend: false })
@@ -96,10 +111,10 @@ export default function TicTacToe() {
 	return (
 		<Result
 			res={winner}
-			resetLevel={name === 'VS AI' && resetLevel}
+			resetLevel={gameType === 'VS AI' && resetLevel}
 			resetBoard={() => setGameStatus({ ...gameStatus, winner: null })}
 			typeGame={'tic_tac_toe'}
-			isOnline={name !== 'VS AI'}
+			isOnline={gameType !== 'VS AI'}
 			level={level}
 		/>
 	);
@@ -112,7 +127,7 @@ function connectToRoom(socket, idRoom, gameStatus, setGameObj, setGameStatus) {
 		setGameObj(room);
 		setGameStatus({
 			...gameStatus,
-			name: 'VS Person',
+			gameType: 'VS Person',
 			needToInviteFriend: false,
 		});
 		socket.emit('join-room', room.id_room);

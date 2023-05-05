@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { BASE_URL } from '../../api/axios';
 
-export default function InviteFriend({ setGameObj, setIsRandomPlayer, setSocket }) {
+export default function InviteFriend({ game, setGameObj, setIsRandomPlayer, setSocket }) {
 	const [url, setUrl] = useState('');
 
 	useEffect(() => {
@@ -11,8 +11,8 @@ export default function InviteFriend({ setGameObj, setIsRandomPlayer, setSocket 
 		socket.on('connect', () => console.log(socket.id));
 		socket.emit('invite-friend-to-game');
 		socket.on('invite-friend-to-game', id_room => {
-			//setUrl(`https://think-fun.online/TicTacToe/${id_room}`);
-			setUrl(`http://localhost:3000/TicTacToe/${id_room}`);
+			//setUrl(`https://think-fun.online/${game}/${id_room}`);
+			setUrl(`http://localhost:3000/${game}/${id_room}`);
 		});
 		socket.on('game-started', room => {
 			setGameObj(room);

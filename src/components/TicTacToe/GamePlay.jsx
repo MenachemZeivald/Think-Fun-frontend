@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import axios from '../../api/axios';
 import { BASE_URL } from '../../api/axios';
 
 import Board from './Board';
@@ -14,6 +15,7 @@ export default function GamePlay({ socketDetails, level, winner, setWinner, setG
 	const [socket] = useState(socketDetails || io.connect(BASE_URL));
 	const [board, setBoard] = useState([' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']);
 	const [userSign, setUserSign] = useState(level === 'person' ? null : 'X');
+	const [canAskHelp, setCanAskHelp] = useState(true);
 	const [connection, setConnection] = useState(WAITING_FOR_CONNECT);
 
 	let myTurn = isMyTurn(board, userSign);
@@ -71,6 +73,19 @@ export default function GamePlay({ socketDetails, level, winner, setWinner, setG
 		// eslint-disable-next-line
 	}, [myTurn]);
 
+	const helpFromGPT = async () => {
+		try {
+			const response = await axios.post(`games/helpFromGPT/?typeGame=${'tic_tac_toe'}`, {
+				board,
+				sign: userSign,
+			});
+			setCanAskHelp(false);
+			makeTurn(response.data, userSign);
+		} catch (error) {
+			console.log(error.response.data);
+		}
+	};
+
 	function makeTurn(index, sign) {
 		if (level === 'person') {
 			sign = userSign;
@@ -120,6 +135,7 @@ export default function GamePlay({ socketDetails, level, winner, setWinner, setG
 			winArr={winArr}
 			resetFunc={resetBoard}
 			vsPerson={level === 'person'}
+			helpFromGPT={canAskHelp && helpFromGPT}
 		/>
 	);
 }

@@ -73,11 +73,15 @@ export default CheckerBoard;
 
 const Board = styled.div`
 	display: grid;
-	grid-template-columns: repeat(8, 9vh);
-	grid-template-rows: repeat(8, 9vh);
+	grid-template-columns: repeat(8, 9vmin);
+	grid-template-rows: repeat(8, 9vmin);
 	border: 5px solid var(--pink);
 	border-radius: 1%;
 	transform: ${p => p.color === 'red' && 'rotate(180deg)'} rotateY(180deg);
+	@media (max-width: 600px) {
+		grid-template-columns: repeat(8, 12vmin);
+		grid-template-rows: repeat(8, 12vmin);
+	}
 `;
 
 const LayoutStyle = styled.div`

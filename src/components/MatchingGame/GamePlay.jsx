@@ -3,7 +3,7 @@ import axios, { BASE_URL } from '../../api/axios';
 import io from 'socket.io-client';
 import Cards from './Cards';
 
-export default function GamePlay({ level, gameType, category, winner, setWinner }) {
+export default function GamePlay({ level, gameType, category, setWinner }) {
 	const CONNECTED = 1;
 	const DISCONNECTED = -1;
 	const WAITING_FOR_CONNECT = 0;
@@ -84,9 +84,8 @@ export default function GamePlay({ level, gameType, category, winner, setWinner 
 	}
 
 	const getCards = async () => {
-		// not working
 		let numOfCards = level === 'Easy' ? 6 : level === 'Medium' ? 12 : 18;
-		let url = `/games/matchingGame/?category=${category}&perPage=${numOfCards}`;
+		let url = `/games/matchingGame/?category=${category}&perPage=${numOfCards / 2}`;
 		try {
 			const response = await axios.get(url);
 			let cardsArr = response.data;

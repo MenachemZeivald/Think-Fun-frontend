@@ -36,8 +36,8 @@ export default function App() {
 				<Route path='login' element={<LoginPage />} />
 				<Route path='forgotPassword' element={<ForgotPassword />} />
 				<Route path='TicTacToe/:idRoom?' element={<TicTacToe />} />
-				<Route path='MatchingGame' element={<MatchingGame />} />
-				<Route path='Checkers' element={<Checkers />} />
+				<Route path='MatchingGame/:idRoom?' element={<MatchingGame />} />
+				<Route path='Checkers/:idRoom?' element={<Checkers />} />
 				<Route path='unauthorized' element={<Unauthorized />} />
 				<Route path='LeaderBoard' element={<LeaderBoard />} />
 				<Route path='*' element={<NoPage />} />

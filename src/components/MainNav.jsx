@@ -17,9 +17,9 @@ export default function MainNav() {
 			<NavStyle>
 				<Icon
 					text={'PERSON'}
-					 to={user ? false : 'login'}
-					 clickHandler={() => user ? setIsPopUpOpen(true) : ''}
-					 //to={false}
+					to={user ? false : 'login'}
+					clickHandler={() => (user ? setIsPopUpOpen(true) : '')}
+					//to={false}
 					//clickHandler={() => setIsPopUpOpen(true) }
 				/>
 				<LoginPopUp blurHandler={() => setIsPopUpOpen(false)} isOpen={isPopUpOpen} />
@@ -42,6 +42,11 @@ const NavStyle = styled.nav`
 	margin: 8px;
 	img {
 		width: 20vw;
+	}
+	@media (max-width: 768px) {
+		img {
+			width: 40vw;
+		}
 	}
 `;
 const LayoutStyle = styled.main`

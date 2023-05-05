@@ -88,6 +88,7 @@ export default function LoginForm({ toggle }) {
 	}
 
 	function serverErrorHandler({ response }) {
+		console.log('server error', response);
 		const errMsg = !response?.status
 			? 'No Server Response'
 			: response.status === 400
@@ -98,6 +99,7 @@ export default function LoginForm({ toggle }) {
 		setErr({ ...err, general: errMsg });
 		notify('error', errMsg);
 	}
+
 	const notify = (status, message) =>
 		toast[status](message, {
 			position: 'top-right',

@@ -30,6 +30,9 @@ const MainContainer = styled.div`
 const LevelsContainer = styled(DefaultStyle)`
 	display: flex;
 	width: 48vw;
+	@media (max-width: 768px) {
+		width: 90vw;
+	}
 `;
 
 const LevelOptionStyle = styled(DefaultStyle)`
@@ -65,4 +68,9 @@ const LevelOptionStyle = styled(DefaultStyle)`
 	}
 
 	${p => p.choosen && 'transform: scale(1.2); box-shadow: 0 0 0 2px var(--pink); z-index: 3;'}
+
+	@media (max-width: 768px) {
+		font-size: 1.5rem;
+		width: 30vw;
+	}
 `;
