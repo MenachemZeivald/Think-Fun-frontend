@@ -20,7 +20,7 @@ export default function GamePlay({ socketDetails, level, winner, setWinner, setG
 
 	let myTurn = isMyTurn(board, userSign);
 
-	console.log('gameObj: ', gameObj);
+	// console.log('gameObj: ', gameObj);
 
 	useEffect(() => {
 		if (level === 'person' && !gameObj) {
@@ -29,7 +29,7 @@ export default function GamePlay({ socketDetails, level, winner, setWinner, setG
 			socket.on('game-started', room => {
 				setConnection(CONNECTED);
 				setGameObj(room);
-				console.log(room);
+				// console.log(room);
 				setUserSign(socket.id === room.idPlayer1 ? 'X' : 'O');
 				socket.emit('join-room', room.id_room);
 			});
@@ -42,7 +42,7 @@ export default function GamePlay({ socketDetails, level, winner, setWinner, setG
 			if (level === 'person') {
 				socket.emit('disconnected');
 				setGameObj();
-				console.log('disconnected', gameObj);
+				// console.log('disconnected', gameObj);
 			}
 		};
 	}, []);

@@ -13,7 +13,7 @@ export default function LeaderBoard() {
 	const getBestPlayers = async () => {
 		try {
 			const response = await axios.get('/bestPlayers');
-			console.log(response.data);
+			// console.log(response.data);
 			setBestPlayers(response.data);
 			if (response.data.ticTacToeBestPlayers) setIsLoading(false);
 		} catch (error) {

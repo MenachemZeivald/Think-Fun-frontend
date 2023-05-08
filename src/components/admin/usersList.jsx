@@ -27,7 +27,7 @@ export default function UsersList() {
         signal: controller.signal,
       });
       isMounted && setUsers(response.data);
-      console.log(response.data);
+      // console.log(response.data);
       setIsLoading(false);
     } catch (err) {
       console.error(err);
@@ -64,7 +64,7 @@ export default function UsersList() {
     let url = `/users/count/?perPage=${perPage}`;
     try {
       const response = await axiosPrivate.get(url);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (err) {
       console.log(err);
       //alert("There problem , come back late");

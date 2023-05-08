@@ -137,6 +137,7 @@ function connectToRoom(socket, idRoom, gameStatus, setGameObj, setGameStatus) {
 	socket.emit('invitation-link', idRoom);
 	socket.on('game-started', room => {
 		setGameObj(room);
+		console.log(room);
 		setGameStatus({
 			...gameStatus,
 			gameType: 'VS Person',
