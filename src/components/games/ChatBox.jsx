@@ -34,7 +34,7 @@ export default function ChatBox({ socketID, closeChatBoxFunc, isOpen, setIsOpen 
 			socket.on('receiver-message', message => {
 				setMessages(messages => {
 					let tempMessages = [{ text: message.text, isSender: false }, ...messages];
-					console.log(tempMessages);
+					// console.log(tempMessages);
 					return tempMessages;
 				});
 				if (!isOpen) {

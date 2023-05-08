@@ -69,7 +69,7 @@ export default function SignUpForm({ toggle }) {
 			const url = '/users/uploadImage';
 			const headers = { Authorization: `Bearer ${accessToken}` };
 			const response = await axios.post(url, formData, { headers });
-			console.log(response.data);
+			// console.log(response.data);
 		} catch (error) {
 			console.error(error.response);
 		}
@@ -87,10 +87,10 @@ export default function SignUpForm({ toggle }) {
 				withCredentials: true,
 			});
 			if (selectedImage) sendImageToServer(response.data?.accessToken);
-			console.log(selectedImage);
+			// console.log(selectedImage);
 			const { name, role, img_url } = response.data;
 			const accessToken = response.data?.accessToken;
-			console.log(response.data);
+			// console.log(response.data);
 			setAuth({
 				name,
 				role,
@@ -165,7 +165,7 @@ export default function SignUpForm({ toggle }) {
 				label={'please enter your email'}
 				name={'email'}
 				err={err.email}
-				onBlur={blurHandler}
+				onChange={blurHandler}
 			/>
 			<InputFile
 				onChange={event => {

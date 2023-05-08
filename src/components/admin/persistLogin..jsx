@@ -27,8 +27,8 @@ function PersistLogin() {
   }, []);
 
   useEffect(() => {
-    console.log("is loading " + isLoading);
-    console.log("aT " + auth.accessToken);
+    // console.log("is loading " + isLoading);
+    // console.log("aT " + auth.accessToken);
   }, [isLoading]);
 
   return (

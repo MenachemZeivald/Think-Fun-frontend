@@ -111,7 +111,7 @@ export default function AccountForm() {
 			const response = await axiosPrivate.get(url, {
 				signal: controller.signal,
 			});
-			console.log(response.data);
+			// console.log(response.data);
 			setInfo(response.data);
 		} catch (error) {
 			console.log(error);
@@ -125,12 +125,11 @@ export default function AccountForm() {
 			const response = await axiosPrivate.put(url, bodyData, {
 				signal: controller.signal,
 			});
-			if (response.data.modifiedCount) {
-				console.log('item edited');
-			}
+			if (response.data.modifiedCount == 1)
+				notify('success', 'Your personal details  has been changed');
+			else notify('error', 'You not change nothing');
 		} catch (error) {
-			console.log('You not change nothing');
-			nav('/login', { state: { from: location }, replace: true });
+			notify('error', 'Bad request');
 		}
 	};
 
@@ -141,11 +140,15 @@ export default function AccountForm() {
 				signal: controller.signal,
 			});
 			if (response.data.modifiedCount) {
-				console.log('item edited');
+				notify('success', 'Your password  has been changed');
+				setExpandChangePasswordArea(false);
 			}
+			// console.log(response);
 		} catch (error) {
-			console.log('You not change nothing');
-			nav('/login', { state: { from: location }, replace: true });
+			if (error.response.status === 401)
+				notify('error', 'Your password has not been changed. Try again');
+			else notify('error', 'Bad request');
+			console.log(error.response);
 		}
 	};
 
@@ -180,7 +183,7 @@ export default function AccountForm() {
 				myInfoInit();
 			}
 		} catch (error) {
-			console.log(error);
+			console.log(error.response);
 			notify('error', 'Your profile picture has not been deleted. Try again');
 		}
 	};

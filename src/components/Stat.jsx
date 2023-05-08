@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import DefaultStyle from '../DefaultStyle';
 
@@ -23,12 +23,14 @@ export default function Stat() {
 			});
 			setStat(response.data);
 		} catch (error) {
-			console.log(error);
+			console.log(error.response);
 			nav('/login', { state: { from: location }, replace: true });
 		}
 	};
 
-	if (!stat) statisticsInit();
+	useEffect(() => {
+		statisticsInit();
+	}, []);
 
 	if (!stat?._id) {
 		return <LoadingGif />;

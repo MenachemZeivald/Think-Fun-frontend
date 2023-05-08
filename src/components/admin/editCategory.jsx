@@ -24,7 +24,7 @@ export default function EditCategory() {
       const response = await axiosPrivate.get(url, {
         signal: controller.signal,
       });
-      console.log(response.data);
+      // console.log(response.data);
       setInfo(response.data);
     } catch (error) {
       console.log(error);

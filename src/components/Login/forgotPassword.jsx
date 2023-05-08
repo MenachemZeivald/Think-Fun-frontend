@@ -38,7 +38,7 @@ function ForgotPassword() {
 					withCredentials: true,
 				}
 			);
-			console.log(response.data);
+			// console.log(response.data);
 			setForgotPasswordToken(response.data.forgotPasswordToken);
 			setIsSending(false);
 			setIsCodeSent(true);
@@ -73,7 +73,7 @@ function ForgotPassword() {
 		try {
 			const headers = { Authorization: `Bearer ${forgotPasswordToken}` };
 			const response = await axios.post('/users/verifyOneTimeCode', { code }, { headers });
-			console.log(response.data);
+			// console.log(response.data);
 			setTokenConfirmationCodeVerified(response.data.tokenConfirmationCodeVerified);
 			setIsVerify(true);
 		} catch (err) {
@@ -98,7 +98,7 @@ function ForgotPassword() {
 					{ password },
 					{ headers }
 				);
-				console.log(response.data);
+				// console.log(response.data);
 				notify('success', 'Your password has been reset');
 			}
 		} catch (err) {

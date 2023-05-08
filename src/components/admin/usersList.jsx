@@ -31,7 +31,6 @@ export default function UsersList() {
 				}
 			);
 			isMounted && setUsers(response.data);
-			console.log(response.data);
 			setIsLoading(false);
 		} catch (err) {
 			console.error(err);
