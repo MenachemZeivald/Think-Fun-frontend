@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { BASE_URL } from '../../api/axios';
 import Card from './Card';
 import Icon from '../Icon';
-import ChatBox from '../TicTacToe/ChatBox';
+import ChatBox from '../games/ChatBox';
 
 export default function Cards({ cards, gameType, socketID, clickHandler, userCanClick }) {
 	const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
@@ -23,6 +23,7 @@ export default function Cards({ cards, gameType, socketID, clickHandler, userCan
 							}`}
 							alt={card.description}
 							index={i}
+							numOfCards={cards.length}
 							clickHandler={clickHandler}
 						/>
 					);
@@ -56,6 +57,7 @@ const CardsContainer = styled.div`
 	@media (max-width: 768px) {
 		grid-template-columns: repeat(${p => (p.cards === 18 ? '4' : '3')}, 1fr);
 		grid-template-rows: ${p => Math.max(3, p.cards / 4)};
+		gap: 0.5rem;
 	}
 `;
 const LayoutStyle = styled.div`

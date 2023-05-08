@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { BASE_URL } from '../../api/axios';
+import LoadingGif from './LoadingGif';
 
 export default function InviteFriend({ game, setGameObj, setIsRandomPlayer, setSocket }) {
 	const [url, setUrl] = useState('');
@@ -11,8 +12,8 @@ export default function InviteFriend({ game, setGameObj, setIsRandomPlayer, setS
 		socket.on('connect', () => console.log(socket.id));
 		socket.emit('invite-friend-to-game');
 		socket.on('invite-friend-to-game', id_room => {
-			//setUrl(`https://think-fun.online/${game}/${id_room}`);
-			setUrl(`http://localhost:3000/${game}/${id_room}`);
+			setUrl(`https://think-fun.online/${game}/${id_room}`);
+			// setUrl(`http://localhost:3000/${game}/${id_room}`);
 		});
 		socket.on('game-started', room => {
 			setGameObj(room);
@@ -39,6 +40,7 @@ export default function InviteFriend({ game, setGameObj, setIsRandomPlayer, setS
 		else if (app === 'copy') navigator.clipboard.writeText(url);
 	};
 
+	if (!url) return <LoadingGif />;
 	return (
 		<div>
 			<div className='share-invite'>

@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
 export default function Card({ click, index, numOfCards, imgUrl, clickHandler, isOpen, isMatch }) {
+	console.log('numOfCards', numOfCards);
 	return (
 		<CardStyle
 			isOpen={isOpen}
@@ -21,7 +22,7 @@ from {transform: translate(-1000px, -1000px) rotateX(180deg)}
 const CardStyle = styled.div`
 	position: relative;
 	aspect-ratio: 5/7;
-	height: ${p => (p.cards === 18 ? '25vh' : '30vh')};
+	height: 25vh;
 	opacity: ${p => p.isMatch && '0'};
 	background-color: #ff0080;
 	background-image: url(${p => p.url});
@@ -44,6 +45,7 @@ const CardStyle = styled.div`
 	}
 
 	@media (max-device-width: 768px) {
-		height: 15vh;
+		height: auto;
+		width: ${p => (p.cards < 18 ? '28vw' : '22vw')};
 	}
 `;

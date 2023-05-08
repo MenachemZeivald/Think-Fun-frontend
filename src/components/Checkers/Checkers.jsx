@@ -3,25 +3,24 @@ import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from '../../api/axios';
 
-import GameCard from '../GameCard';
 import GamePlay from './GamePlay';
-import InviteFriend from '../TicTacToe/inviteFriend';
-import Result from '../TicTacToe/Result';
+import InviteFriend from '../games/inviteFriend';
+import Result from '../games/Result';
+import ChooseOptions from '../games/ChooseOptions';
 
 export default function Checkers() {
 	const { idRoom } = useParams();
 
 	const [gameStatus, setGameStatus] = useState({
-		gameType: null,
-		level: null,
-		needToInviteFriend: null,
-		winner: null,
+		gameType: '',
+		level: '',
+		winner: '',
 	});
 
 	const [gameObj, setGameObj] = useState();
 	const [socket, setSocket] = useState();
 
-	const { gameType, level, needToInviteFriend, winner } = gameStatus;
+	const { gameType, level, winner } = gameStatus;
 
 	if (idRoom && !socket) setSocket(io.connect(BASE_URL));
 
@@ -31,47 +30,33 @@ export default function Checkers() {
 	function resetLevel() {
 		setGameStatus({
 			...gameStatus,
-			level: null,
-			winner: null,
+			level: '',
+			winner: '',
 		});
 	}
 
 	return !gameType ? (
-		<>
-			<GameCard
-				setter={gameType => setGameStatus({ ...gameStatus, gameType })}
-				name='VS Person'
-			/>
-			<GameCard
-				setter={gameType => setGameStatus({ ...gameStatus, gameType })}
-				name='VS AI'
-			/>
-		</>
-	) : gameType === 'VS Person' && needToInviteFriend === null ? (
-		<>
-			<GameCard
-				setter={() => setGameStatus({ ...gameStatus, needToInviteFriend: false })}
-				name='random player'
-			/>
-			<GameCard
-				setter={() => setGameStatus({ ...gameStatus, needToInviteFriend: true })}
-				name='invite friend'
-			/>
-		</>
-	) : needToInviteFriend ? (
+		<ChooseOptions
+			firstOption={'VS AI'}
+			secondOption={'random player'}
+			thirdOption={'invite friend'}
+			setter={gameType => setGameStatus({ ...gameStatus, gameType })}
+		/>
+	) : gameType === 'invite friend' ? (
 		<InviteFriend
 			game={'Checkers'}
 			setGameObj={setGameObj}
-			setIsRandomPlayer={() => setGameStatus({ ...gameStatus, needToInviteFriend: false })}
+			setIsRandomPlayer={() => setGameStatus({ ...gameStatus, gameType: 'VS Person' })}
 			setSocket={setSocket}
 			socket={socket}
 		/>
 	) : gameType === 'VS AI' && !level ? (
-		<>
-			<GameCard setter={level => setGameStatus({ ...gameStatus, level })} name='Easy' />
-			<GameCard setter={level => setGameStatus({ ...gameStatus, level })} name='Medium' />
-			<GameCard setter={level => setGameStatus({ ...gameStatus, level })} name='Hard' />
-		</>
+		<ChooseOptions
+			firstOption={'Easy'}
+			secondOption={'Medium'}
+			thirdOption={'Hard'}
+			setter={level => setGameStatus({ ...gameStatus, level })}
+		/>
 	) : !winner ? (
 		<GamePlay
 			level={level || 'person'}
@@ -83,9 +68,9 @@ export default function Checkers() {
 		<Result
 			res={winner}
 			resetLevel={gameType === 'VS AI' && resetLevel}
-			resetBoard={() => setGameStatus({ ...gameStatus, winner: null })}
+			resetBoard={() => setGameStatus({ ...gameStatus, winner: '' })}
 			typeGame={'checkers'}
-			isOnline={gameType !== 'VS AI'}
+			isOnline={!level}
 			level={level}
 		/>
 	);

@@ -4,18 +4,18 @@ import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from '../../api/axios';
 
-import GameCard from '../GameCard';
+import ChooseOptions from '../games/ChooseOptions';
+import Option from '../games/Option';
 import GamePlay from './GamePlay';
-import InviteFriend from '../TicTacToe/inviteFriend';
+import InviteFriend from '../games/inviteFriend';
 import LevelSlider from './LevelSlider';
-import Result from '../TicTacToe/Result';
+import Result from '../games/Result';
 
 export default function MatchingGame() {
 	const { idRoom } = useParams();
 
 	const [gameStatus, setGameStatus] = useState({
 		gameType: null,
-		needToInviteFriend: null,
 		level: null,
 		category: null,
 		winner: null,
@@ -25,7 +25,7 @@ export default function MatchingGame() {
 	const [socket, setSocket] = useState();
 	const [categoryArr, setCategoryArr] = useState([]);
 
-	const { gameType, needToInviteFriend, level, category, winner } = gameStatus;
+	const { gameType, level, category, winner } = gameStatus;
 
 	useEffect(() => {
 		getCategories();
@@ -52,40 +52,24 @@ export default function MatchingGame() {
 
 	if (!gameType) {
 		return (
-			<>
-				<GameCard
-					setter={gameType => setGameStatus({ ...gameStatus, gameType })}
-					name='VS Person'
-				/>
-				<GameCard
-					setter={gameType => setGameStatus({ ...gameStatus, gameType })}
-					name='VS AI'
-				/>
-			</>
+			<ChooseOptions
+				firstOption={'VS AI'}
+				secondOption={'Random Player'}
+				thirdOption={'Invite Friend'}
+				setter={gameType =>
+					gameType === 'Random Player'
+						? setGameStatus({ ...gameStatus, gameType: 'VS Person' })
+						: setGameStatus({ ...gameStatus, gameType })
+				}
+			/>
 		);
 	}
-	if (gameType === 'VS Person' && needToInviteFriend === null) {
-		return (
-			<>
-				<GameCard
-					setter={() => setGameStatus({ ...gameStatus, needToInviteFriend: false })}
-					name='Random Player'
-				/>
-				<GameCard
-					setter={() => setGameStatus({ ...gameStatus, needToInviteFriend: true })}
-					name='Invite Friend'
-				/>
-			</>
-		);
-	}
-	if (needToInviteFriend) {
+	if (gameType === 'Invite Friend') {
 		return (
 			<InviteFriend
 				game={'MatchingGame'}
 				setGameObj={setGameObj}
-				setIsRandomPlayer={() =>
-					setGameStatus({ ...gameStatus, needToInviteFriend: false })
-				}
+				setIsRandomPlayer={() => setGameStatus({ ...gameStatus, gameType: 'VS Person' })}
 				setSocket={setSocket}
 				socket={socket}
 			/>
@@ -105,7 +89,7 @@ export default function MatchingGame() {
 					setLevel={level => setGameStatus({ ...gameStatus, level })}
 				/>
 				{categoryArr.map(item => (
-					<GameCard key={item._id} setter={setCategoryById} name={item.name} />
+					<Option key={item._id} setter={setCategoryById} name={item.name} />
 				))}
 			</>
 		);
@@ -140,7 +124,6 @@ function connectToRoom(socket, idRoom, gameStatus, setGameObj, setGameStatus) {
 		setGameStatus({
 			...gameStatus,
 			gameType: 'VS Person',
-			needToInviteFriend: false,
 		});
 		socket.emit('join-room', room.id_room);
 	});

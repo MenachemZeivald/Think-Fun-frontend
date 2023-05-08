@@ -6,6 +6,7 @@ import { BASE_URL } from '../../api/axios';
 import Board from './Board';
 
 import { AIturn, checkIfWin, findWinArr, isMyTurn } from './functions';
+import LoadingGif from '../games/LoadingGif';
 
 export default function GamePlay({ socketDetails, level, winner, setWinner, setGameObj, gameObj }) {
 	const CONNECTED = 1;
@@ -115,9 +116,7 @@ export default function GamePlay({ socketDetails, level, winner, setWinner, setG
 	}
 
 	if (level === 'person' && connection === WAITING_FOR_CONNECT) {
-		let imgSrc =
-			'https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700';
-		return <img src={imgSrc} alt={'Loading gif'} />;
+		return <LoadingGif />;
 	}
 
 	if (connection === DISCONNECTED) {

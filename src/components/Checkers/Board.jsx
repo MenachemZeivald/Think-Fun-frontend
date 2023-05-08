@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import Square from './Square';
-import ResetBtn from '../TicTacToe/ResetBtn';
+import ResetBtn from '../games/ResetBtn';
 import Icon from '../Icon';
-import ChatBox from '../TicTacToe/ChatBox';
+import ChatBox from '../games/ChatBox';
 
 function CheckerBoard({
 	board,

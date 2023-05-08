@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 import { BASE_URL } from '../../api/axios';
 
 import CheckerBoard from './Board';
+import LoadingGif from '../games/LoadingGif';
 
 import { getLegalMoves, movePiece, checkIfWin, AiTurn, countPieces } from './functions';
 
@@ -154,9 +155,7 @@ export default function GamePlay({ level, winner, setWinner }) {
 	}
 
 	if (level === 'person' && connection === WAITING_FOR_CONNECT) {
-		let imgSrc =
-			'https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700';
-		return <img src={imgSrc} alt={'Loading gif'} />;
+		return <LoadingGif />;
 	}
 	if (connection === DISCONNECTED) {
 		return <h1>user left</h1>;

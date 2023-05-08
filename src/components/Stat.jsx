@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import DefaultStyle from '../DefaultStyle';
 
+import LoadingGif from './games/LoadingGif';
+
 import useAxiosPrivate from '../hooks/useAxiosPrivet';
 import { useNavigate, useLocation } from 'react-router-dom';
-// import useAuth from '../hooks/useAuth';
 
 export default function Stat() {
 	const [stat, setStat] = useState();
@@ -30,9 +31,7 @@ export default function Stat() {
 	if (!stat) statisticsInit();
 
 	if (!stat?._id) {
-		let imgSrc =
-			'https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700';
-		return <img src={imgSrc} alt={'Loading gif'} />;
+		return <LoadingGif />;
 	}
 	return (
 		<>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios, { BASE_URL } from '../../api/axios';
 import io from 'socket.io-client';
 import Cards from './Cards';
+import LoadingGif from '../games/LoadingGif';
 
 export default function GamePlay({ level, gameType, category, setWinner }) {
 	const CONNECTED = 1;
@@ -114,9 +115,7 @@ export default function GamePlay({ level, gameType, category, setWinner }) {
 	if (openCards.length === 2) checkIfMatched();
 
 	if (!cards.length) {
-		let loadingGif =
-			'https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700';
-		return <img src={loadingGif} alt={'Loading gif'} />;
+		return <LoadingGif />;
 	}
 
 	if (connectionStatus === DISCONNECTED) {

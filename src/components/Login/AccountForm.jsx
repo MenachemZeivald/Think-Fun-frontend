@@ -11,8 +11,7 @@ import InputButton from './InputButton';
 import InputField from './InputField';
 import InputFile from './InputFile';
 import ProfilePic from './ProfilePic';
-
-import DEFAULT_PROFILE_IMG from '../../assets/avataaars.png';
+import LoadingGif from '../games/LoadingGif';
 import { BASE_URL } from '../../api/axios';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -215,9 +214,7 @@ export default function AccountForm() {
 
 	// TODO: add info to placeholder
 	if (!info._id) {
-		let imgSrc =
-			'https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700';
-		return <img src={imgSrc} alt={'Loading gif'} />;
+		return <LoadingGif />;
 	}
 	return (
 		<Form as='form' SubmitHandler={submitHandler} accountFormStyle={true}>
