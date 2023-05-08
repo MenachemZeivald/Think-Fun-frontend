@@ -114,8 +114,8 @@ export default function LoginForm({ toggle }) {
     return (
         <Form as='form' SubmitHandler={SubmitHandler}>
             <h1>LOGIN</h1>
-            <InputField label={'please enter your email'} name='email' err={err.email} onBlur={blurHandler} />
-            <InputField label={'please enter your password'} type='password' name='password' err={err.password} onBlur={blurHandler} />
+            <InputField label={'please enter your email'} name='email' err={err.email} onChange={blurHandler} />
+            <InputField label={'please enter your password'} type='password' name='password' err={err.password} onChange={blurHandler} />
             {/* TO DO check with Menachem */}
             {/* <a style={{ border: '2px solid var(--pink)', padding: '.2rem', borderRadius: '.5em' }}>forget password{err.email || err.password || err.general || ''}</a> */}
             <div>

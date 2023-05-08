@@ -165,7 +165,7 @@ export default function SignUpForm({ toggle }) {
 				label={'please enter your email'}
 				name={'email'}
 				err={err.email}
-				onBlur={blurHandler}
+				onChange={blurHandler}
 			/>
 			<InputFile
 				onChange={event => {
