@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import useAxiosPrivate from '../../hooks/useAxiosPrivet';
 import useRefreshToken from '../../hooks/useRefreshToken';
 import useAuth from '../../hooks/useAuth';
-import useLogout from '../../hooks/useLogout';
+// import useLogout from '../../hooks/useLogout';
 
 import Form from './Form';
 import InputButton from './InputButton';
@@ -23,12 +23,12 @@ export default function AccountForm() {
 	const axiosPrivate = useAxiosPrivate();
 	const refresh = useRefreshToken();
 	const controller = new AbortController();
-	const logout = useLogout();
+	// const logout = useLogout();
 	const nav = useNavigate();
 	const location = useLocation();
 
 	const { auth, setAuth } = useAuth();
-	const [errMsg, setErrMsg] = useState(''); // TODO: merge with err
+	// const [errMsg, setErrMsg] = useState(''); // TODO: merge with err
 	const [info, setInfo] = useState({});
 	const [userDetails, setUserDetails] = useState({ name: '', email: '' });
 	const [passwordData, setPasswordData] = useState({
@@ -37,7 +37,6 @@ export default function AccountForm() {
 		oldPassword: '',
 	});
 
-	const [selectedImage, setSelectedImage] = useState(null);
 	const [expandChangePasswordArea, setExpandChangePasswordArea] = useState(false);
 	const [formErr, setFormErr] = useState({
 		name: '',
@@ -103,6 +102,7 @@ export default function AccountForm() {
 
 	useEffect(() => {
 		myInfoInit();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const myInfoInit = async () => {
@@ -125,7 +125,7 @@ export default function AccountForm() {
 			const response = await axiosPrivate.put(url, bodyData, {
 				signal: controller.signal,
 			});
-			if (response.data.modifiedCount == 1)
+			if (response.data.modifiedCount === 1)
 				notify('success', 'Your personal details  has been changed');
 			else notify('error', 'You not change nothing');
 		} catch (error) {
@@ -178,7 +178,7 @@ export default function AccountForm() {
 			const response = await axiosPrivate.delete('/users/deleteImage', {
 				signal: controller.signal,
 			});
-			if (response.data == 'OK') {
+			if (response.data === 'OK') {
 				notify('success', 'Your profile photo has been deleted');
 				myInfoInit();
 			}

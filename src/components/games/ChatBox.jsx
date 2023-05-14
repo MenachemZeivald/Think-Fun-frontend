@@ -44,6 +44,7 @@ export default function ChatBox({ socketID, closeChatBoxFunc, isOpen, setIsOpen 
 				}
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket]);
 
 	const sendMessage = e => {

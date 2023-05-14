@@ -40,6 +40,7 @@ export default function GamePlay({ level, winner, setWinner }) {
 				};
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const movePieceMemoized = useCallback((board, currIndex, color, isKing, nextIndex) => {
@@ -86,6 +87,7 @@ export default function GamePlay({ level, winner, setWinner }) {
 				setTurn('red');
 			}, 1000);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [turn]);
 
 	function initBoard() {

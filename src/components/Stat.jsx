@@ -30,6 +30,7 @@ export default function Stat() {
 
 	useEffect(() => {
 		statisticsInit();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	if (!stat?._id) {

@@ -1,7 +1,5 @@
 import { createContext, useState } from 'react';
 
-import PHOTO from '../assets/avataaars.png';
-
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {

@@ -15,6 +15,7 @@ export default function CategoriesList() {
 
 	useEffect(() => {
 		getCategories();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [search]);
 
 	const getCategories = async () => {

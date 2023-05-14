@@ -46,6 +46,7 @@ export default function GamePlay({ socketDetails, level, winner, setWinner, setG
 				// console.log('disconnected', gameObj);
 			}
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -63,6 +64,7 @@ export default function GamePlay({ socketDetails, level, winner, setWinner, setG
 				setConnection(DISCONNECTED);
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket]);
 
 	useEffect(() => {

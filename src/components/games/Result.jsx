@@ -36,6 +36,7 @@ export default function Result({ res, resetLevel, resetBoard, typeGame, isOnline
 		};
 		console.log(auth);
 		!auth?.name ? refreshToken() : matchingGameInit();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth]);
 
 	useEffect(() => {

@@ -9,7 +9,8 @@ export default function UsersList() {
 	const location = useLocation();
 
 	const [users, setUsers] = useState([]);
-	const [page, setPage] = useState(1);
+	// const [page, setPage] = useState(1);
+	const page = 1;
 	const [perPage, setPerPage] = useState(10);
 	const [sort, setShort] = useState('');
 	const [reverse, setReverse] = useState(false);
@@ -18,6 +19,7 @@ export default function UsersList() {
 
 	useEffect(() => {
 		getUsers();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sort, page, perPage, reverse, search]);
 
 	let isMounted = true;
@@ -46,7 +48,7 @@ export default function UsersList() {
 				signal: controller.signal,
 			});
 			console.log(response.data);
-			if (response.data.modifiedCount == 1) {
+			if (response.data.modifiedCount === 1) {
 				getUsers();
 			}
 		} catch (err) {
@@ -61,6 +63,7 @@ export default function UsersList() {
 
 	useEffect(() => {
 		count();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [perPage]);
 
 	const count = async () => {

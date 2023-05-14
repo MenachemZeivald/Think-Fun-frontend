@@ -3,13 +3,10 @@ import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from '../../api/axios';
 
-import Option from '../games/Option';
 import GamePlay from './GamePlay';
 import Result from '../games/Result';
 import InviteFriend from '../games/inviteFriend';
 
-import img1vs1 from '../../assets/personPlay.png';
-import imgvsai from '../../assets/robot_play.png';
 import ChooseOptions from '../games/ChooseOptions';
 
 export default function TicTacToe() {

@@ -20,6 +20,7 @@ export default function EditMatchingGame() {
 
 	useEffect(() => {
 		matchingGameInit();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const matchingGameInit = async () => {

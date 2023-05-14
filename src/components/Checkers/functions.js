@@ -186,100 +186,100 @@ function AiTryToEat(board) {
 	return res[randomIndex];
 }
 
-function AiMove(board, color) {
-	let bestMove = null;
-	let bestScore = -Infinity;
-	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
-		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
-			if (board[rowIndex][columnIndex].piece === color) {
-				const legalMoves = getLegalMoves(
-					board,
-					[rowIndex, columnIndex],
-					color,
-					board[rowIndex][columnIndex].isKing
-				);
-				for (const move of legalMoves) {
-					const newBoard = movePiece(
-						JSON.parse(JSON.stringify(board)),
-						[rowIndex, columnIndex],
-						color,
-						board[rowIndex][columnIndex].isKing,
-						move
-					);
-					const score = minimax(newBoard, 3, false, color);
-					if (score > bestScore) {
-						bestScore = score;
-						bestMove = [rowIndex, columnIndex, move];
-					}
-				}
-			}
-		}
-	}
-	return bestMove;
-}
+// function AiMove(board, color) {
+// 	let bestMove = null;
+// 	let bestScore = -Infinity;
+// 	for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+// 		for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+// 			if (board[rowIndex][columnIndex].piece === color) {
+// 				const legalMoves = getLegalMoves(
+// 					board,
+// 					[rowIndex, columnIndex],
+// 					color,
+// 					board[rowIndex][columnIndex].isKing
+// 				);
+// 				for (const move of legalMoves) {
+// 					const newBoard = movePiece(
+// 						JSON.parse(JSON.stringify(board)),
+// 						[rowIndex, columnIndex],
+// 						color,
+// 						board[rowIndex][columnIndex].isKing,
+// 						move
+// 					);
+// 					const score = minimax(newBoard, 3, false, color);
+// 					if (score > bestScore) {
+// 						bestScore = score;
+// 						bestMove = [rowIndex, columnIndex, move];
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// 	return bestMove;
+// }
 
-function minimax(board, depth, isMaximizing, color) {
-	const result = checkIfWin(board, color);
-	if (result === 'win') return 10;
-	if (result === 'lose') return -10;
-	if (result === 'tie') return 0;
-	if (depth === 0) return 0;
+// function minimax(board, depth, isMaximizing, color) {
+// 	const result = checkIfWin(board, color);
+// 	if (result === 'win') return 10;
+// 	if (result === 'lose') return -10;
+// 	if (result === 'tie') return 0;
+// 	if (depth === 0) return 0;
 
-	if (isMaximizing) {
-		let bestScore = -Infinity;
-		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
-			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
-				if (board[rowIndex][columnIndex].piece === color) {
-					const legalMoves = getLegalMoves(
-						board,
-						[rowIndex, columnIndex],
-						color,
-						board[rowIndex][columnIndex].isKing
-					);
-					for (const move of legalMoves) {
-						const newBoard = movePiece(
-							JSON.parse(JSON.stringify(board)),
-							[rowIndex, columnIndex],
-							color,
-							board[rowIndex][columnIndex].isKing,
-							move
-						);
-						const score = minimax(newBoard, depth - 1, false, color);
-						bestScore = Math.max(score, bestScore);
-					}
-				}
-			}
-		}
-		return bestScore;
-	} else {
-		let bestScore = Infinity;
-		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
-			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
-				if (board[rowIndex][columnIndex].piece === color) {
-					const legalMoves = getLegalMoves(
-						board,
-						[rowIndex, columnIndex],
-						color,
-						board[rowIndex][columnIndex].isKing
-					);
-					for (const move of legalMoves) {
-						const newBoard = movePiece(
-							JSON.parse(JSON.stringify(board)),
-							rowIndex,
-							columnIndex,
-							color,
-							board[rowIndex][columnIndex].isKing,
-							move
-						);
-						const score = minimax(newBoard, depth - 1, true, color);
-						bestScore = Math.min(score, bestScore);
-					}
-				}
-			}
-		}
-		return bestScore;
-	}
-}
+// 	if (isMaximizing) {
+// 		let bestScore = -Infinity;
+// 		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+// 			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+// 				if (board[rowIndex][columnIndex].piece === color) {
+// 					const legalMoves = getLegalMoves(
+// 						board,
+// 						[rowIndex, columnIndex],
+// 						color,
+// 						board[rowIndex][columnIndex].isKing
+// 					);
+// 					for (const move of legalMoves) {
+// 						const newBoard = movePiece(
+// 							JSON.parse(JSON.stringify(board)),
+// 							[rowIndex, columnIndex],
+// 							color,
+// 							board[rowIndex][columnIndex].isKing,
+// 							move
+// 						);
+// 						const score = minimax(newBoard, depth - 1, false, color);
+// 						bestScore = Math.max(score, bestScore);
+// 					}
+// 				}
+// 			}
+// 		}
+// 		return bestScore;
+// 	} else {
+// 		let bestScore = Infinity;
+// 		for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+// 			for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+// 				if (board[rowIndex][columnIndex].piece === color) {
+// 					const legalMoves = getLegalMoves(
+// 						board,
+// 						[rowIndex, columnIndex],
+// 						color,
+// 						board[rowIndex][columnIndex].isKing
+// 					);
+// 					for (const move of legalMoves) {
+// 						const newBoard = movePiece(
+// 							JSON.parse(JSON.stringify(board)),
+// 							rowIndex,
+// 							columnIndex,
+// 							color,
+// 							board[rowIndex][columnIndex].isKing,
+// 							move
+// 						);
+// 						const score = minimax(newBoard, depth - 1, true, color);
+// 						bestScore = Math.min(score, bestScore);
+// 					}
+// 				}
+// 			}
+// 		}
+// 		return bestScore;
+// 	}
+// }
 
 export function AiTurn(board, level, color = 'black') {
 	if (level === 'Easy') return AiRandomMove(board);

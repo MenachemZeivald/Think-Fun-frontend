@@ -27,6 +27,7 @@ export default function LoginPopUp({ blurHandler, isOpen }) {
 			await refresh();
 		};
 		if (!auth?.name) refreshToken();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth]);
 
 	const signOut = async () => {

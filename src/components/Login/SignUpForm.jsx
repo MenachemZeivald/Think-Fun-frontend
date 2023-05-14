@@ -16,7 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignUpForm({ toggle }) {
-	const { setAuth, auth } = useAuth();
+	const { setAuth } = useAuth();
 	const nav = useNavigate();
 	const location = useLocation();
 
@@ -68,7 +68,8 @@ export default function SignUpForm({ toggle }) {
 		try {
 			const url = '/users/uploadImage';
 			const headers = { Authorization: `Bearer ${accessToken}` };
-			const response = await axios.post(url, formData, { headers });
+			await axios.post(url, formData, { headers });
+			// const response = await axios.post(url, formData, { headers });
 			// console.log(response.data);
 		} catch (error) {
 			console.error(error.response);
