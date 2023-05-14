@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 export default function LoadingGif() {
-	useEffect(() => {
-		setTimeout(() => {
-			window.history.back();
-		}, 5000);
-	}, []);
+	// useEffect(() => {
+	// 	let timer = setTimeout(() => {
+	// 		window.history.back();
+	// 	}, 5000);
+	// 	return () => {
+	// 		clearTimeout(timer);
+	// 	};
+	// }, []);
 
 	let imgSrc =
 		'https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700';
