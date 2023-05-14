@@ -16,7 +16,7 @@ export default function LeaderBoard() {
 			const response = await axios.get('/bestPlayers');
 			setBestPlayers(response.data);
 		} catch (error) {
-			console.log(error.response.data);
+			console.log(error.response);
 		}
 	};
 
