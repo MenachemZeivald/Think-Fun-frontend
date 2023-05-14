@@ -8,7 +8,9 @@ export default function ChatBox({ socketID, closeChatBoxFunc, isOpen, setIsOpen 
 	const [messages, setMessages] = useState([]);
 	const [input, setInput] = useState('');
 	const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
 	const [socket, id_room] = socketID;
+
 	const divRef = useRef(null);
 
 	const { auth } = useAuth();
@@ -124,7 +126,8 @@ const ChatBoxStyle = styled.div`
 		left: 0;
 		bottom: 0;
 		width: 100%;
-		height: ${p => (p.isOpen ? '80vh' : '0')};
+		height: ${p => (p.isOpen ? '100svh' : '0')};
+		border-radius: 0;
 	}
 `;
 

@@ -22,7 +22,7 @@ from {transform: translate(-1000px, -1000px) rotateX(180deg)}
 const CardStyle = styled.div`
 	position: relative;
 	aspect-ratio: 5/7;
-	height: 25vh;
+	height: 25svh;
 	opacity: ${p => p.isMatch && '0'};
 	background-color: #ff0080;
 	background-image: url(${p => p.url});

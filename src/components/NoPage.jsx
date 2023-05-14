@@ -13,7 +13,7 @@ export default function NoPage() {
 }
 
 const ErrorContainer = styled.div`
-	height: 80vh;
+	height: 80svh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;

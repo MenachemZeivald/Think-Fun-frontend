@@ -52,7 +52,7 @@ const NavStyle = styled.nav`
 const LayoutStyle = styled.main`
 	position: relative;
 	z-index: 1;
-	height: 80vh;
+	height: 80svh;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;

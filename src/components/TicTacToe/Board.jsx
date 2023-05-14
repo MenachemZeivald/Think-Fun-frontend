@@ -68,7 +68,7 @@ const LayoutStyle = styled.div`
 `;
 
 const BoardStyle = styled.div`
-	max-width: 75vh;
+	max-width: 75svh;
 	width: 80vmin;
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
@@ -79,8 +79,8 @@ const BoardStyle = styled.div`
 	background-color: var(--yellow);
 	@media (max-device-width: 768px) {
 		width: 97vw;
-		margin-top: 10vh;
-		margin-bottom: 5vh;
+		margin-top: 10svh;
+		margin-bottom: 5svh;
 	}
 `;
 

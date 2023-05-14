@@ -26,4 +26,7 @@ const SquareStyle = styled(DefaultStyle)`
 	color: ${p => p.findInWinArr && 'white'};
 	-webkit-text-stroke: ${p => p.findInWinArr && 'var(--Dblue) 5px'};
 	transition: all 0.7s;
+	@media (max-device-width: 768px) {
+		font-size: 18vmin;
+	}
 `;

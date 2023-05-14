@@ -15,10 +15,10 @@ export default function MatchingGame() {
 	const { idRoom } = useParams();
 
 	const [gameStatus, setGameStatus] = useState({
-		gameType: null,
-		level: null,
-		category: null,
-		winner: null,
+		gameType: '',
+		level: '',
+		category: '',
+		winner: '',
 	});
 
 	const [gameObj, setGameObj] = useState();
@@ -108,10 +108,11 @@ export default function MatchingGame() {
 	return (
 		<Result
 			res={winner}
-			resetBoard={() => setGameStatus({ ...gameStatus, winner: null })}
 			typeGame={'matching_game'}
 			level={gameType === 'VS Person' ? '' : level}
 			isOnline={gameType === 'VS Person'}
+			resetBoard={() => setGameStatus({ ...gameStatus, winner: '' })}
+			resetLevel={() => setGameStatus({ ...gameStatus, level: '', category: '', winner: '' })}
 		/>
 	);
 }

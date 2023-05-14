@@ -87,7 +87,7 @@ export default function Result({ res, resetLevel, resetBoard, typeGame, isOnline
 }
 
 const ResAnim = keyframes`
-  from { bottom: -70vh; }
+  from { bottom: -70svh; }
   to { bottom: 0; }
 `;
 
@@ -98,11 +98,11 @@ const ResContainer = styled.div`
 	justify-content: space-evenly;
 	position: relative;
 	animation: ${ResAnim} 2s ease alternate;
-	height: 70svh;
+	height: 70ssvh;
 	width: 100svw;
-	@media (max-device-width: 425px) {
-		margin-top: 9vh;
-	}
+	/* @media (max-device-width: 425px) {
+		margin-top: 9svh;
+	} */
 `;
 const ResTxt = styled.div`
 	font-size: 20vw;
@@ -111,9 +111,9 @@ const ResTxt = styled.div`
 	text-align: center;
 	line-height: 1em;
 	@media (max-device-width: 768px) {
-		font-size: 17vh;
+		font-size: 17svh;
 		&:lang(he) {
-			font-size: 15vh;
+			font-size: 15svh;
 		}
 	}
 `;
@@ -125,11 +125,11 @@ const ResBtnContainer = styled.div`
 	font-size: 5vw;
 	& > * {
 		width: 40%;
-		padding: 1vh 0;
+		padding: 1svh 0;
 	}
 
 	@media (max-device-width: 425px) {
-		margin-top: 2vh;
+		margin-top: 2svh;
 	}
 `;
 
@@ -139,9 +139,7 @@ const ResIcons = styled.div`
 	width: 100%;
 	height: 100%;
 	z-index: -1;
-	& .material-symbols-outlined {
-		font-size: 100%;
-	}
+	font-size: 50px;
 	& > * {
 		position: absolute;
 	}
@@ -152,17 +150,17 @@ function createIconsLoations() {
 	let iconsLocations = [
 		`
 		   top: 0; left: 10vw; transform: rotate(10deg)`,
-		`top: 5vh; left: 60vw`,
-		`top: 4vh; left: 80vw; transform: rotate(-10deg)`,
-		`top: 60vh; left: 7vw; transform: rotate(10deg)`,
-		`top: 3vh; left: 30vw; transform: rotate(10deg)`,
-		`top: 30vh; left: 95vw; transform: rotate(-10deg)`,
-		`top: 70vh; left: 20vw`,
-		`top: 40vh; left: 7vw; transform: rotate(10deg)`,
-		`top: 70vh; left: 80vw; transform: rotate(10deg)`,
-		`top: 50vh; left: 20vw; transform: rotate(10deg)`,
-		`top: 30vh; left: 48vw; transform: rotate(-10deg)`,
-		`top: 70vh; left: 50vw`,
+		`top: 5svh; left: 60vw`,
+		`top: 4svh; left: 80vw; transform: rotate(-10deg)`,
+		`top: 60svh; left: 7vw; transform: rotate(10deg)`,
+		`top: 3svh; left: 30vw; transform: rotate(10deg)`,
+		`top: 30svh; left: 95vw; transform: rotate(-10deg)`,
+		`top: 70svh; left: 20vw`,
+		`top: 40svh; left: 7vw; transform: rotate(10deg)`,
+		`top: 70svh; left: 80vw; transform: rotate(10deg)`,
+		`top: 50svh; left: 20vw; transform: rotate(10deg)`,
+		`top: 30svh; left: 48vw; transform: rotate(-10deg)`,
+		`top: 70svh; left: 50vw`,
 	];
 	let str = ``;
 	for (let index = 0; index < iconsLocations.length; index++) {

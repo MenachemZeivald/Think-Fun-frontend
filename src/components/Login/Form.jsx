@@ -22,7 +22,7 @@ const FormStyle = styled(DefaultStyle)`
 			? `
 			padding: 2em;
 			aspect-ratio: initial;
-			min-height: 70vh;`
+			min-height: 70svh;`
 			: `
 			aspect-ratio: 2/3;
 			padding: 2rem;
