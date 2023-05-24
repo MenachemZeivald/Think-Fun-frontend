@@ -41,18 +41,20 @@ const NavStyle = styled.nav`
 	align-items: center;
 	margin: 8px;
 	img {
-		width: 20vw;
+		height: 50px;
+		transform: translateY(-5px) scale(1.5);
+		transform-origin: top;
 	}
-	@media (max-width: 768px) {
+	@media (max-device-width: 768px) {
 		img {
-			width: 40vw;
+			height: 40px;
 		}
 	}
 `;
 const LayoutStyle = styled.main`
 	position: relative;
 	z-index: 1;
-	height: 80svh;
+	height: calc(100vh - 78px);
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;

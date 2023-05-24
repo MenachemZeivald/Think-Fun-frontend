@@ -127,7 +127,7 @@ const ChatBoxStyle = styled.div`
 		left: 0;
 		bottom: 0;
 		width: 100%;
-		height: ${p => (p.isOpen ? '100svh' : '0')};
+		height: ${p => (p.isOpen ? 'calc(100vh - 58px)' : '0')};
 		border-radius: 0;
 	}
 `;

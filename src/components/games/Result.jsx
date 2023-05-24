@@ -99,11 +99,8 @@ const ResContainer = styled.div`
 	justify-content: space-evenly;
 	position: relative;
 	animation: ${ResAnim} 2s ease alternate;
-	height: 70ssvh;
+	height: 70svh;
 	width: 100svw;
-	/* @media (max-device-width: 425px) {
-		margin-top: 9svh;
-	} */
 `;
 const ResTxt = styled.div`
 	font-size: 20vw;

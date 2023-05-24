@@ -29,7 +29,7 @@ export default function LeaderBoard() {
 			<LeaderBoardContainer>
 				<h1>Leader Board </h1>
 			</LeaderBoardContainer>
-			<div>
+			<StatLayout>
 				<StatContainer>
 					<h1>tic tac toe</h1>
 					<ul>
@@ -66,7 +66,7 @@ export default function LeaderBoard() {
 						})}
 					</ul>
 				</StatContainer>
-			</div>
+			</StatLayout>
 		</>
 	);
 }
@@ -127,5 +127,14 @@ const LeaderBoardContainer = styled.div`
 		/* border: 3px solid var(--yellow); */
 		letter-spacing: 3px;
 		margin-bottom: 0;
+	}
+`;
+
+const StatLayout = styled.div`
+	@media (max-width: 768px) {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
 	}
 `;
