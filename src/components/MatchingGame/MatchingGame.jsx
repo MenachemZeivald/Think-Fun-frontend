@@ -77,7 +77,7 @@ export default function MatchingGame() {
 	}
 	if (!category && gameType === 'VS Person') {
 		let randomIndex = Math.floor(Math.random() * categoryArr.length);
-		let randomCategory = categoryArr[randomIndex].category_id;
+		let randomCategory = categoryArr?.[randomIndex]?.category_id;
 		setGameStatus({ ...gameStatus, category: randomCategory });
 	}
 
