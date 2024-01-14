@@ -36,11 +36,8 @@ export default function LoginForm({ toggle }) {
 	const blurHandler = e => {
 		const { name, value } = e.target;
 		let errMsg = inputErrorHandler(name, value);
-		if (errMsg) {
-			setErr({ ...err, [name]: errMsg });
-		} else {
-			setFormData({ ...formData, [name]: value.trim() });
-		}
+		setErr({ ...err, [name]: errMsg });
+		setFormData({ ...formData, [name]: value.trim() });
 	};
 
 	const SubmitHandler = event => {
@@ -143,6 +140,9 @@ export default function LoginForm({ toggle }) {
 			<InputButton type='submit' text='submit' />
 			<InputButton clickHandler={toggle} text={'SIGN UP'} border={'full'} />
 
+			<Link to={'/forgotPassword'} style={{ color: '#4f92c5', margin: '24px 0 0 0' }}>
+				forgot password
+			</Link>
 			<ReCAPTCHA
 				sitekey='6LdZHoglAAAAAAKOoJmp6GdSxZ_qub6x1ZzkuH9M'
 				size='invisible'
