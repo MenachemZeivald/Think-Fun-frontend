@@ -26,13 +26,14 @@ export default function InputField({
 				onFocus={onFocus}
 				onChange={onChange}
 				onBlur={onBlur}
-				placeholder={placeholder} // err?
+				placeholder={placeholder}
 			/>
 		</LabelStyle>
 	);
 }
 
 export const LabelStyle = styled.label`
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -42,8 +43,7 @@ export const LabelStyle = styled.label`
 
 	${p =>
 		p.flexRow &&
-		`width: 100%;
-	flex-direction: row;
+		`flex-direction: row;
 	justify-content: space-between;
 	padding-bottom: 0;
 

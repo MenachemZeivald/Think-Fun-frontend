@@ -18,6 +18,7 @@ export default function InputButton({ type, text, clickHandler, border, marginBo
 }
 
 export const InputButtonStyle = styled(DefaultStyle)`
+	min-width: 70%;
 	border: none;
 	box-shadow: ${p => (p.border ? '0 0 0 2px' : '0px -1.5px 0px 0px')} var(--pink) inset;
 	border-radius: ${p => (p.border ? '4px' : '0px')};

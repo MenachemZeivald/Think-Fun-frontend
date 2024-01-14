@@ -37,16 +37,14 @@ export default function LoginPopUp({ blurHandler, isOpen }) {
 	};
 
 	return (
-		<LoginPopUpStyle
-			tabIndex={-1}
-			ref={divRef}
-			onBlur={blurHandler}
-			bgImg={
-				auth?.profilePic?.[0] !== 'h' ? BASE_URL + '/' + auth?.profilePic : auth?.profilePic
-			}
-			isOpen={isOpen}
-		>
-			<div></div>
+		<LoginPopUpStyle tabIndex={-1} ref={divRef} onBlur={blurHandler} isOpen={isOpen}>
+			<ProfilePic
+				bgImg={
+					auth?.profilePic?.[0] !== 'h'
+						? BASE_URL + '/' + auth?.profilePic
+						: auth?.profilePic
+				}
+			/>
 			<span>name: {auth?.name}</span>
 			<InputButton
 				text={'Edit profile'}
@@ -89,22 +87,24 @@ const LoginPopUpStyle = styled(DefaultStyle)`
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-evenly;
-	top: 8px;
+	top: 0;
 	height: 0;
 	width: 0;
 	border: none;
+	cursor: default;
 	animation: ${p => (p.isOpen ? openAnim : closeAnim)} 0.1s forwards;
 	&:focus {
 		outline: none;
 	}
-	div:first-child {
-		width: 150px;
-		background-image: url(${p => p.bgImg});
-		background-size: contain;
-		background-position: center;
-		border: 3px solid var(--pink);
-		border-radius: 50%;
-		overflow: hidden;
-		aspect-ratio: 1;
-	}
+`;
+
+const ProfilePic = styled.div`
+	width: 150px;
+	background-image: url(${p => p.bgImg});
+	background-size: contain;
+	background-position: center;
+	border: 3px solid var(--pink);
+	border-radius: 50%;
+	overflow: hidden;
+	aspect-ratio: 1;
 `;

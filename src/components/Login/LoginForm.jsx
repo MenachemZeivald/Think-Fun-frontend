@@ -18,13 +18,11 @@ export default function LoginForm({ toggle }) {
 	const location = useLocation();
 
 	const reRef = useRef();
-	// const [errMsg, setErrMsg] = useState('');
 	const [formData, setFormData] = useState({
 		email: '',
 		password: '',
 		recaptchaToken: '',
 	});
-
 	const [err, setErr] = useState({
 		email: '',
 		password: '',
@@ -113,7 +111,7 @@ export default function LoginForm({ toggle }) {
 		});
 
 	return (
-		<Form as='form' SubmitHandler={SubmitHandler}>
+		<Form SubmitHandler={SubmitHandler}>
 			<h1>LOGIN</h1>
 			<InputField
 				label={'please enter your email'}
@@ -128,8 +126,9 @@ export default function LoginForm({ toggle }) {
 				err={err.password}
 				onChange={blurHandler}
 			/>
-			{/* TO DO check with Menachem */}
-			{/* <a style={{ border: '2px solid var(--pink)', padding: '.2rem', borderRadius: '.5em' }}>forget password{err.email || err.password || err.general || ''}</a> */}
+			<Link to={'/forgotPassword'} style={{ color: '#4f92c5' }}>
+				forgot password
+			</Link>
 			<div>
 				<label htmlFor='persist'>Trust this Device </label>
 				<input
@@ -140,13 +139,10 @@ export default function LoginForm({ toggle }) {
 					onChange={() => setPersist(prev => !prev)}
 				/>
 			</div>
-
+			<span>{Object.values(err).reduce((a, b) => a + ' ' + b, '')}</span>
 			<InputButton type='submit' text='submit' />
 			<InputButton clickHandler={toggle} text={'SIGN UP'} border={'full'} />
 
-			<Link to={'/forgotPassword'} style={{ color: '#4f92c5', margin: '24px 0 0 0' }}>
-				forgot password
-			</Link>
 			<ReCAPTCHA
 				sitekey='6LdZHoglAAAAAAKOoJmp6GdSxZ_qub6x1ZzkuH9M'
 				size='invisible'

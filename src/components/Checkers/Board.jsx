@@ -55,14 +55,14 @@ function CheckerBoard({
 					setIsOpen={setIsChatBoxOpen}
 				/>
 			)}
-			<FooterStyle vsPerson={vsPerson}>
-				{vsPerson && <Icon text={'question_mark'} />}
-				{vsPerson || <ResetBtn resetFunc={resetFunc} />}
-				{vsPerson && (
+			<FooterStyle>
+				{vsPerson ? (
 					<Icon
 						text={'chat'}
 						clickHandler={() => setIsChatBoxOpen(isChatBoxOpen => !isChatBoxOpen)}
 					/>
+				) : (
+					<ResetBtn resetFunc={resetFunc} />
 				)}
 			</FooterStyle>
 		</LayoutStyle>
@@ -93,6 +93,6 @@ const LayoutStyle = styled.div`
 const FooterStyle = styled.div`
 	width: 100%;
 	display: flex;
-	justify-content: ${p => (p.vsPerson ? 'space-between' : 'center')};
+	justify-content: flex-end;
 	align-items: center;
 `;

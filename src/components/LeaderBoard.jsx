@@ -104,6 +104,9 @@ const StatContainer = styled(DefaultStyle)`
 		align-items: center;
 		width: 100%;
 	}
+	@media (min-width: 768px) {
+		width: min(25%, 400px);
+	}
 `;
 
 const LeaderBoardContainer = styled.div`
@@ -114,7 +117,8 @@ const LeaderBoardContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	margin: 40px 0;
+	margin: 0;
+	margin-top: 40px;
 	h1 {
 		background-color: var(--pink);
 		font-size: 48px;
@@ -131,10 +135,11 @@ const LeaderBoardContainer = styled.div`
 `;
 
 const StatLayout = styled.div`
-	@media (max-width: 768px) {
+	width: min(100%, 1400px);
+	@media (min-width: 768px) {
 		display: flex;
 		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
+		justify-content: space-evenly;
+		align-items: flex-start;
 	}
 `;

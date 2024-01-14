@@ -17,16 +17,15 @@ export default function MainNav() {
 			<NavStyle>
 				<Icon
 					text={'PERSON'}
-					to={user ? false : 'login'}
+					link={user ? false : 'login'}
+					pic={auth?.profilePic}
 					clickHandler={() => (user ? setIsPopUpOpen(true) : '')}
-					//to={false}
-					//clickHandler={() => setIsPopUpOpen(true) }
 				/>
 				<LoginPopUp blurHandler={() => setIsPopUpOpen(false)} isOpen={isPopUpOpen} />
 				<Link to='/'>
 					<img src={LOGO} alt='logo think fun'></img>
 				</Link>
-				<Icon text='bar_chart' to='/LeaderBoard' />
+				<Icon text='bar_chart' link='/LeaderBoard' />
 			</NavStyle>
 			<LayoutStyle>{<Outlet />}</LayoutStyle>
 		</>

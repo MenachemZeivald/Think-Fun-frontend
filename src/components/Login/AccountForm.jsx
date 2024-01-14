@@ -28,7 +28,6 @@ export default function AccountForm() {
 	const location = useLocation();
 
 	const { auth, setAuth } = useAuth();
-	// const [errMsg, setErrMsg] = useState(''); // TODO: merge with err
 	const [info, setInfo] = useState({});
 	const [userDetails, setUserDetails] = useState({ name: '', email: '' });
 	const [passwordData, setPasswordData] = useState({
@@ -220,7 +219,7 @@ export default function AccountForm() {
 		return <LoadingGif />;
 	}
 	return (
-		<Form as='form' SubmitHandler={submitHandler} accountFormStyle={true}>
+		<Form SubmitHandler={submitHandler} accountFormStyle={true}>
 			<ProfilePic
 				src={info.img_url?.[0] !== 'h' ? BASE_URL + '/' + info.img_url : info.img_url}
 			/>

@@ -31,6 +31,8 @@ header a {
   color: #4f92c5;
 }
 .categories-container {
+  position: relative;
+  top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
